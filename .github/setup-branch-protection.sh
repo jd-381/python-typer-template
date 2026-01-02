@@ -21,17 +21,13 @@ gh api \
     "strict": true,
     "contexts": ["Lint", "Format Check", "Test", "Documentation"]
   },
-  "enforce_admins": true,
-  "required_pull_request_reviews": {
-    "dismiss_stale_reviews": true,
-    "require_code_owner_reviews": true,
-    "required_approving_review_count": 1
-  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
   "restrictions": null,
   "allow_force_pushes": false,
   "allow_deletions": false,
   "block_creations": false,
-  "required_conversation_resolution": true,
+  "required_conversation_resolution": false,
   "lock_branch": false,
   "allow_fork_syncing": false,
   "required_linear_history": false,
@@ -42,9 +38,5 @@ EOF
 echo "✓ Branch protection configured successfully!"
 echo ""
 echo "Settings applied:"
-echo "  - Require PR before merging"
 echo "  - Require status checks: Lint, Format Check, Test, Documentation"
-echo "  - Require code owner reviews"
-echo "  - Require conversation resolution"
-echo "  - Enforce for admins"
 echo "  - Block force pushes and deletions"

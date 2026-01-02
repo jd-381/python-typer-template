@@ -11,9 +11,6 @@ CI/CD pipeline that runs on every push and pull request:
 - **Test**: Runs the test suite
 - **Documentation**: Verifies USAGE.md is up to date
 
-### [CODEOWNERS](CODEOWNERS)
-Defines code ownership for automatic review requests.
-
 ### [setup-branch-protection.sh](setup-branch-protection.sh)
 Script to configure branch protection rules for the `main` branch.
 
@@ -35,11 +32,7 @@ make github
 ```
 
 The `make github` command will:
-- Require pull requests before merging
 - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
-- Require code owner reviews
-- Require conversation resolution
-- Enforce rules for admins
 - Block force pushes and branch deletion
 
 ## Manual Configuration
@@ -51,11 +44,9 @@ If you prefer to configure branch protection manually, minimally set:
 3. Click **Add branch protection rule**
 4. Set **Branch name pattern** to `main`
 5. Enable:
-   - ✅ Require a pull request before merging
    - ✅ Require status checks to pass before merging
      - Select: `Lint`, `Format Check`, `Test`, `Documentation`
-   - ✅ Require conversation resolution before merging
-   - ✅ Do not allow bypassing the above settings
+   - ✅ Do not allow force pushes
 6. Save changes
 
 ## CI/CD in GitHub Actions

@@ -46,14 +46,9 @@ make github
 ```
 
 This will automatically configure your `main` branch to:
-- Require pull requests before merging
 - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
-- Require conversation resolution
 - Block force pushes and deletions
 
-**Optional: Enable Code Owner Reviews**
-
-If working with a team, uncomment lines in [.github/CODEOWNERS](.github/CODEOWNERS) and replace `@your-github-username` with actual GitHub usernames to automatically request reviews from code owners.
 
 ### 2. Customize Your CLI
 
@@ -124,7 +119,6 @@ All tests should pass! If they fail, check that you've updated all package names
 - [ ] Ran tests successfully with `make test`
 - [ ] Generated documentation with `make docs`
 - [ ] (Optional) Configured branch protection with `make github`
-- [ ] (Optional) Updated `.github/CODEOWNERS` with team members
 - [ ] Updated CONTRIBUTING.md with your project-specific contribution guidelines
 - [ ] **Deleted everything above this line (including this checklist!)**
 
