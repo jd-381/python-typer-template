@@ -1,0 +1,73 @@
+# GitHub Configuration
+
+This directory contains GitHub-specific configuration files.
+
+## Files
+
+### [workflows/ci.yml](workflows/ci.yml)
+CI/CD pipeline that runs on every push and pull request:
+- **Lint**: Code quality checks with Ruff
+- **Format Check**: Ensures code is properly formatted
+- **Test**: Runs the test suite
+- **Documentation**: Verifies USAGE.md is up to date
+
+### [CODEOWNERS](CODEOWNERS)
+Defines code ownership for automatic review requests.
+
+### [setup-branch-protection.sh](setup-branch-protection.sh)
+Script to configure branch protection rules for the `main` branch.
+
+## Requirements
+
+- **GitHub CLI**: Install from https://cli.github.com/
+- **Repository admin access**: Branch protection requires admin permissions
+
+## Initial Setup
+
+After cloning this repository and pushing it to GitHub, run these commands:
+
+```bash
+# 1. Install pre-commit hooks locally
+make hooks
+
+# 2. Configure GitHub branch protection (requires GitHub CLI)
+make github
+```
+
+The `make github` command will:
+- Require pull requests before merging
+- Require all CI checks to pass (Lint, Format Check, Test, Documentation)
+- Require code owner reviews
+- Require conversation resolution
+- Enforce rules for admins
+- Block force pushes and branch deletion
+
+## Manual Configuration
+
+If you prefer to configure branch protection manually, minimally set:
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings** → **Branches**
+3. Click **Add branch protection rule**
+4. Set **Branch name pattern** to `main`
+5. Enable:
+   - ✅ Require a pull request before merging
+   - ✅ Require status checks to pass before merging
+     - Select: `Lint`, `Format Check`, `Test`, `Documentation`
+   - ✅ Require conversation resolution before merging
+   - ✅ Do not allow bypassing the above settings
+6. Save changes
+
+## CI/CD in GitHub Actions
+
+The workflow runs automatically on:
+- Every push to `main`
+- Every pull request to `main`
+
+All checks must pass before code can be merged, preventing:
+- Unformatted code
+- Failing tests
+- Outdated documentation
+- Code quality issues
+
+Even changes made via GitHub's web editor must pass these checks through a pull request.

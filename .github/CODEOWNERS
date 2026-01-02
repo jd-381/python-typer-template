@@ -1,0 +1,15 @@
+# CODEOWNERS file
+# These owners will be requested for review when someone opens a pull request.
+# This file is currently commented out - uncomment when working with a team.
+#
+# Syntax: <file-pattern> @github-username @github-org/team-name
+#
+# Examples and usage (uncomment when needed):
+#
+# * @your-github-username                    # You own everything by default
+# *.py @your-github-username                 # All Python files
+# /tests/ @your-github-username @qa-team     # Test directory
+# /.github/ @devops-team                     # GitHub config files
+# /docs/ @docs-team                          # Documentation
+# /.github/workflows/ @your-github-username  # CI/CD workflows
+# /my_package/ @your-github-username         # Main package code
