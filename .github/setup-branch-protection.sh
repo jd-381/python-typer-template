@@ -19,9 +19,14 @@ gh api \
 {
   "required_status_checks": {
     "strict": true,
-    "contexts": ["Lint", "Format Check", "Test", "Documentation"]
+    "checks": [
+      {"context": "Lint"},
+      {"context": "Format Check"},
+      {"context": "Test"},
+      {"context": "Documentation"}
+    ]
   },
-  "enforce_admins": false,
+  "enforce_admins": true,
   "required_pull_request_reviews": null,
   "restrictions": null,
   "allow_force_pushes": false,
@@ -36,7 +41,20 @@ gh api \
 EOF
 
 echo "✓ Branch protection configured successfully!"
+
+# Enable automatic branch deletion on merge
+echo ""
+echo "Enabling automatic branch deletion on merge..."
+gh api \
+  --method PATCH \
+  -H "Accept: application/vnd.github+json" \
+  "/repos/$REPO" \
+  -f delete_branch_on_merge=true
+
+echo "✓ Automatic branch deletion enabled!"
 echo ""
 echo "Settings applied:"
-echo "  - Require status checks: Lint, Format Check, Test, Documentation"
+echo "  - Require status checks to pass: Lint, Format Check, Test, Documentation"
+echo "  - Enforce rules for administrators"
 echo "  - Block force pushes and deletions"
+echo "  - Automatically delete head branches on PR merge"
