@@ -36,7 +36,19 @@ gh api \
 EOF
 
 echo "✓ Branch protection configured successfully!"
+
+# Enable automatic branch deletion on merge
+echo ""
+echo "Enabling automatic branch deletion on merge..."
+gh api \
+  --method PATCH \
+  -H "Accept: application/vnd.github+json" \
+  "/repos/$REPO" \
+  -f delete_branch_on_merge=true
+
+echo "✓ Automatic branch deletion enabled!"
 echo ""
 echo "Settings applied:"
 echo "  - Require status checks: Lint, Format Check, Test, Documentation"
 echo "  - Block force pushes and deletions"
+echo "  - Automatically delete head branches on PR merge"
