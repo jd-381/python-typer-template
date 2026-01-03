@@ -1,0 +1,173 @@
+name: Initialize Repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: 'Python package name (e.g., weather_fetcher) - must use underscores'
+        required: true
+        type: string
+      cli_name:
+        description: 'CLI executable name (e.g., we-fe) - must use hyphens if multi-word'
+        required: true
+        type: string
+
+jobs:
+  initialize:
+    name: Initialize Repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate inputs
+        run: |
+          PACKAGE_NAME="${{ inputs.package_name }}"
+          CLI_NAME="${{ inputs.cli_name }}"
+
+          # Validate package_name uses underscores (no hyphens)
+          if [[ "$PACKAGE_NAME" =~ - ]]; then
+            echo "❌ Error: package_name must use underscores, not hyphens (e.g., weather_fetcher)"
+            echo "   You provided: $PACKAGE_NAME"
+            exit 1
+          fi
+
+          # Validate package_name is a valid Python identifier
+          if ! python3 -c "import sys; sys.exit(0 if '$PACKAGE_NAME'.isidentifier() else 1)"; then
+            echo "❌ Error: package_name must be a valid Python identifier"
+            echo "   You provided: $PACKAGE_NAME"
+            exit 1
+          fi
+
+          # Validate CLI_NAME doesn't contain underscores
+          if [[ "$CLI_NAME" =~ _ ]]; then
+            echo "⚠️  Warning: cli_name contains underscores. Convention is to use hyphens for multi-word CLI names."
+            echo "   You provided: $CLI_NAME"
+            echo "   Consider using: ${CLI_NAME//_/-}"
+          fi
+
+          echo "✅ Validation passed"
+          echo "   Package name: $PACKAGE_NAME"
+          echo "   CLI name: $CLI_NAME"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Rename package directory
+        run: |
+          if [ -d "my_package" ]; then
+            mv my_package "${{ inputs.package_name }}"
+            echo "✅ Renamed my_package/ to ${{ inputs.package_name }}/"
+          else
+            echo "⚠️  my_package directory not found, skipping"
+          fi
+
+      - name: Update Makefile
+        run: |
+          sed -i 's/^PACKAGE_NAME = my_package$/PACKAGE_NAME = ${{ inputs.package_name }}/' Makefile
+          sed -i 's/^CLI_NAME = my-cli$/CLI_NAME = ${{ inputs.cli_name }}/' Makefile
+          echo "✅ Updated Makefile"
+
+      - name: Update pyproject.toml
+        run: |
+          # Convert package_name underscores to hyphens for distribution name (PEP 508)
+          DIST_NAME="${{ inputs.package_name }}"
+          DIST_NAME="${DIST_NAME//_/-}"
+
+          # Update project name
+          sed -i "s/^name = \"my-package\"$/name = \"$DIST_NAME\"/" pyproject.toml
+
+          # Update CLI script entry point
+          sed -i "s/^my-cli = \"my_package\.main:app\"$/${{ inputs.cli_name }} = \"${{ inputs.package_name }}.main:app\"/" pyproject.toml
+
+          # Update packages list
+          sed -i "s/^packages = \[\"my_package\"\]$/packages = [\"${{ inputs.package_name }}\"]/" pyproject.toml
+
+          echo "✅ Updated pyproject.toml"
+
+      - name: Update test imports
+        run: |
+          # Update all Python test files
+          find tests -name "*.py" -type f -exec sed -i "s/from my_package\./from ${{ inputs.package_name }}./g" {} +
+          find tests -name "*.py" -type f -exec sed -i "s/import my_package/import ${{ inputs.package_name }}/g" {} +
+
+          echo "✅ Updated test imports"
+
+      - name: Verify changes
+        run: |
+          echo "📋 Changed files:"
+          git status --short
+
+          echo ""
+          echo "📝 Makefile changes:"
+          git diff Makefile || true
+
+          echo ""
+          echo "📝 pyproject.toml changes:"
+          git diff pyproject.toml || true
+
+          echo ""
+          echo "📝 Test file changes:"
+          git diff tests/ || true
+
+      - name: Run validation checks
+        run: |
+          # Install dependencies
+          uv sync --dev
+
+          # Run linter
+          echo "🔍 Running linter..."
+          make lint
+
+          # Run formatter check
+          echo "🎨 Checking formatting..."
+          make format
+
+          # Run tests
+          echo "🧪 Running tests..."
+          make test
+
+          echo "✅ All validation checks passed!"
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add -A
+
+          git commit -m "$(cat <<'EOF'
+          chore: initialize repository
+
+          - Package name: ${{ inputs.package_name }}
+          - CLI name: ${{ inputs.cli_name }}
+
+          Automated initialization performed by GitHub Actions workflow.
+          EOF
+          )"
+
+          git push
+
+          echo "✅ Changes committed and pushed successfully!"
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "🎉 Repository initialization complete!"
+          echo ""
+          echo "📦 Package name: ${{ inputs.package_name }}"
+          echo "⚡ CLI name: ${{ inputs.cli_name }}"
+          echo ""
+          echo "Next steps:"
+          echo "1. Pull the latest changes: git pull"
+          echo "2. Install dependencies: uv sync --dev"
+          echo "3. Set up pre-commit hooks: make hooks"
+          echo "4. Install the CLI: make install"
+          echo "5. Test your CLI: ${{ inputs.cli_name }} --help"
