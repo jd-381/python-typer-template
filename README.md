@@ -44,11 +44,41 @@ make github
 
 ### 2. Customize Your Project
 
-Rename the package and CLI in the following locations to match your project, where:
-- `my_package` should be the name of the package and Python module directory (e.g., `weather_fetcher`)
-- `my-cli` should be the executable name that users type in the terminal (e.g., `weatherf`)
+You can customize your project either **automatically using GitHub Actions** (recommended) or manually.
+
+#### Option A: Automatic Customization (Recommended)
+
+Use the GitHub Actions workflow to automatically rename everything:
+
+1. Go to your repository on GitHub
+2. Click on the **Actions** tab
+3. Select **Customize Repository** workflow from the left sidebar
+4. Click **Run workflow** button
+5. Enter your desired names:
+   - **Package name**: Python module name with underscores (e.g., `weather_fetcher`)
+   - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `weatherf` or `weather-cli`)
+6. Click **Run workflow**
+
+The workflow will:
+- Validate your inputs
+- Rename the package directory
+- Update all configuration files
+- Update all test imports
+- Run linting, formatting, and tests
+- Commit and push the changes
+
+Once complete, pull the changes locally:
+```bash
+git pull
+```
 
 **You must retain the underscore and hyphen naming conventions.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
+
+#### Option B: Manual Customization
+
+If you prefer to customize manually, rename the package and CLI in the following locations, where:
+- `my_package` should be the name of the package and Python module directory (e.g., `weather_fetcher`)
+- `my-cli` should be the executable name that users type in the terminal (e.g., `weatherf`)
 
 #### **Package Directory**
 
