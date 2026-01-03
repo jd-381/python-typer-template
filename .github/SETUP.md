@@ -12,32 +12,40 @@ CI/CD pipeline that runs on every push and pull request:
 - **Documentation**: Verifies USAGE.md is up to date
 
 ### [setup-branch-protection.sh](setup-branch-protection.sh)
-Script to configure branch protection rules for the `main` branch.
+**Optional one-time script** to configure branch protection rules for the `main` branch using the GitHub CLI.
 
-## Requirements
-
-- **GitHub CLI**: Install from https://cli.github.com/
-- **Repository admin access**: Branch protection requires admin permissions
+You can use this script for convenience, configure branch protection manually (see below), or add it to your Infrastructure as Code.
 
 ## Initial Setup
 
-After cloning this repository and pushing it to GitHub, run these commands:
+After cloning this repository and pushing it to GitHub:
 
 ```bash
-# 1. Install pre-commit hooks locally
+# Install pre-commit hooks locally
 make hooks
+```
 
-# 2. Configure GitHub branch protection (requires GitHub CLI)
+## Branch Protection (Optional)
+
+Branch protection is **optional but recommended** to enforce CI checks before merging.
+
+### Option 1: Automated Setup (requires GitHub CLI)
+
+```bash
+# One-time setup - requires admin access and GitHub CLI
 make github
 ```
 
-The `make github` command will:
+This will:
 - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
 - Block force pushes and branch deletion
+- Enable automatic branch deletion after merge
 
-## Manual Configuration
+**Note:** The status checks (Lint, Format Check, Test, Documentation) are created by your CI workflow after it runs at least once. Push some code first to make them available.
 
-If you prefer to configure branch protection manually, minimally set:
+### Option 2: Manual Configuration
+
+If you prefer to configure branch protection manually:
 
 1. Go to your repository on GitHub
 2. Navigate to **Settings** → **Branches**
@@ -48,6 +56,10 @@ If you prefer to configure branch protection manually, minimally set:
      - Select: `Lint`, `Format Check`, `Test`, `Documentation`
    - ✅ Do not allow force pushes
 6. Save changes
+
+### Option 3: Infrastructure as Code
+
+Manage branch protection alongside your other infrastructure using tools like Terraform (with the GitHub provider), Pulumi, or other IaC solutions.
 
 ## CI/CD in GitHub Actions
 
