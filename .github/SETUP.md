@@ -18,7 +18,7 @@ You can use this script for convenience, configure branch protection manually (s
 
 ## Initial Setup
 
-After cloning this repository and pushing it to GitHub:
+After cloning this repository:
 
 ```bash
 # Install pre-commit hooks locally
@@ -40,8 +40,6 @@ This will:
 - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
 - Block force pushes and branch deletion
 - Enable automatic branch deletion after merge
-
-**Note:** The status checks (Lint, Format Check, Test, Documentation) are created by your CI workflow after it runs at least once. Push some code first to make them available.
 
 ### Option 2: Manual Configuration
 

@@ -18,15 +18,9 @@ A production-ready template for building Python CLI applications with [Typer](ht
 
 ### 1. Create Your Repository from This Template
 
-1. Click the "Use this template" button at the top of this repository
-2. Choose a repository name (e.g., `your-package`)
-3. Clone your new repository:
-   ```bash
-   git clone https://github.com/YOUR-USERNAME/your-package.git
-   cd your-package
-   ```
-
-**Then install dependencies:**
+1. Click the `Use this template` button at the top of this repository
+2. Choose `Create a new repository` then a repository name (e.g., `my-package`)
+3. Clone your new repository locally then set it up for development:
 
 ```bash
 # Install dependencies
@@ -36,91 +30,113 @@ uv sync --dev
 make hooks
 ```
 
-#### Optional: Configure GitHub Branch Protection
-
-After pushing your repository to GitHub, set up branch protection rules to enforce CI checks:
+4. Optional: Configure GitHub Branch Protection
+   - Branch protection is **optional but recommended** to enforce CI checks before merging. See [SETUP.md](.github/SETUP.md).
+   - This will:
+      - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
+      - Block force pushes and branch deletion
+      - Enable automatic branch deletion after merge
 
 ```bash
 # Configure branch protection (requires GitHub CLI)
 make github
 ```
 
-This will automatically configure your `main` branch to:
-- Require all CI checks to pass (Lint, Format Check, Test, Documentation)
-- Block force pushes and deletions
+### 2. Customize Your Project
 
+Rename the package and CLI in the following locations to match your project, where:
+- `my_package` should be the name of the package and Python module directory (e.g., `weather_fetcher`)
+- `my-cli` should be the executable name that users type in the terminal (e.g., `weatherf`)
 
-### 2. Customize Your CLI
-
-Rename the following to match your project:
+**You must retain the underscore and hyphen naming conventions.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
 
 #### **Package Directory**
+
+Rename the root project directory to your package name:
+
 ```bash
-# Package name (Python module directory)
-mv my_package your_package
+mv my_package weather_fetcher
 ```
 
-#### **Makefile** (`Makefile`)
+#### `Makefile`
+
+Update `Makefile` variables to your package and CLI name:
+
 ```makefile
-# Package name (Python module directory)
-PACKAGE_NAME = your_package
-# CLI executable name (what users type in terminal)
-CLI_NAME = your-cli
+PACKAGE_NAME = my_package -> weather_fetcher
+CLI_NAME = my-cli -> weatherf
 ```
 
-#### **pyproject.toml**
+#### `pyproject.toml`
+
+Update the following project settings to your package and CLI name:
+
 ```toml
 [project]
-name = "your-package"
-description = "Your package description"
+name = "my-package" -> "weather-fetcher"
 
 [project.scripts]
-your-cli = "your_package.main:app"
+my-cli = "my_package.main:app" -> 
+weatherf = "weather_fetcher.main:app" 
 
 [tool.hatch.build.targets.wheel]
-packages = ["your_package"]
+packages = ["my_package"] -> ["weather_fetcher"]
 ```
 
-#### **Tests**
-Update import statements in `tests/` to use your new package name:
+#### **Tests** `tests/*`
+
+Update import statements in `tests/` to your package name:
+
 ```python
-from your_package.main import app
-from your_package.commands.greet import GreetingService
+# test_greet.py
+# test_mail.py
+from my_package.main import app ->
+from weather_fetcher.main import app
+
+# test_services.py
+from my_package.commands.greet import GreetingService ->
+from weather_fetcher.commands.greet import GreetingService
+
+from my_package.commands.mail import MailService ->
+from weather_fetcher.commands.mail import MailService
 ```
 
 ### 3. Validate Your Setup
 
-Run tests to ensure everything is renamed correctly and working:
+Run tests to ensure everything is renamed correctly:
 
 ```bash
-make format
 make lint
+make format
 make test
 ```
 
-All tests should pass! If they fail, check that you've updated all package names consistently.
+All tests should pass! If they fail, check that you've updated all package and CLI names consistently.
+
+Next, test the actual CLI installation:
+
+```bash
+# Install your CLI
+make install
+
+# Run a command
+weatherf greet --names World
+```
+
+If the command prints `Hello World`, your setup is complete!
 
 ### 4. Build Your CLI
 
-1. Modify or delete example commands in `your_package/commands/`
-2. Update `your_package/main.py` to register your commands
+1. Modify or delete example commands in `my_package/commands/`
+2. Update `my_package/main.py` to register your commands
 3. Write tests in `tests/`
 4. Run tests: `make test`
-5. Generate documentation: `make docs`
+5. Generate usage documentation: `make docs`
+6. Update this `README.md` (below example) and `CONTRIBUTING.md` with your proj
 
 ### 5. Clean Up Template Instructions
 
-✅ **Before you're done, complete this checklist:**
-- [ ] Renamed `my_package` directory to your package name
-- [ ] Updated `PACKAGE_NAME` and `CLI_NAME` in Makefile
-- [ ] Updated package name, description, scripts, and wheel in pyproject.toml
-- [ ] Updated test imports to use your package name
-- [ ] Modified or deleted example commands
-- [ ] Ran tests successfully with `make test`
-- [ ] Generated documentation with `make docs`
-- [ ] (Optional) Configured branch protection with `make github`
-- [ ] Updated CONTRIBUTING.md with your project-specific contribution guidelines
-- [ ] **Deleted everything above this line (including this checklist!)**
+**Delete everything above this line**
 
 <------------------------------------------------>
 
@@ -154,9 +170,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ## Usage
 
-See the auto-generated [usage documentation](./USAGE.md) for all available commands and options.
+See the [usage documentation](./USAGE.md) for all available commands and options.
 
-### Quick Examples
+### Quick Start
 
 ```bash
 # Example command
