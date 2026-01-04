@@ -3,16 +3,7 @@ from typing import Annotated
 
 import typer
 
-from .logger_utils import yellow
-
-
-def validate_user_input_comma_list(input: str | None) -> list[str] | None:
-    if input is None:
-        return None
-    if isinstance(input, list):
-        if len(input) == 1 and "," in input[0]:
-            return [part.strip() for part in input[0].split(",")]
-        return input
+from my_package.common.logger_utils import yellow
 
 
 def validate_user_input_debug(input: bool) -> bool:
