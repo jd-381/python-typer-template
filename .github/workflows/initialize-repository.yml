@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       package_name:
-        description: 'Python package name (e.g., weather_fetcher) - must use underscores'
+        description: 'Python package name (e.g., mail_fetcher) - must use underscores'
         required: true
         type: string
       cli_name:
-        description: 'CLI executable name (e.g., we-fe) - must use hyphens if multi-word'
+        description: 'CLI executable name (e.g., ma-fe) - must use hyphens if multi-word'
         required: true
         type: string
 
@@ -110,6 +110,10 @@ jobs:
 
       - name: Update imports
         run: |
+          # Convert package_name underscores to hyphens for distribution name (PEP 508)
+          DIST_NAME="${{ inputs.package_name }}"
+          DIST_NAME="${DIST_NAME//_/-}"
+
           # Update all Python files in tests directory
           find tests -name "*.py" -type f -exec sed -i "s/from my_package\./from ${{ inputs.package_name }}./g" {} +
           find tests -name "*.py" -type f -exec sed -i "s/import my_package/import ${{ inputs.package_name }}/g" {} +
@@ -118,7 +122,10 @@ jobs:
           find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/from my_package\./from ${{ inputs.package_name }}./g" {} +
           find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/import my_package/import ${{ inputs.package_name }}/g" {} +
 
-          echo "✅ Updated imports in tests and package files"
+          # Update version() call in main.py to use the distribution name
+          sed -i "s/version(\"my-package\")/version(\"$DIST_NAME\")/" "${{ inputs.package_name }}/main.py"
+
+          echo "✅ Updated imports and version() call in package files"
 
       - name: Verify changes
         run: |
