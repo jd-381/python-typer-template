@@ -20,198 +20,87 @@ A production-ready template for building Python CLI applications with [Typer](ht
 
 1. Click the `Use this template` button at the top of this repository
 2. Choose `Create a new repository` then a repository name (e.g., `my-package`)
-3. Clone your new repository locally then set it up for development:
 
-```bash
-# Install dependencies
-uv sync --dev
+### 2. Initialize Your Project
 
-# Set up pre-commit hooks
-make hooks
-```
+Initialize your project using the GitHub Actions workflow:
 
-4. Optional: Configure GitHub Branch Protection
-   - Branch protection is **optional but recommended** to enforce CI checks before merging. See [SETUP.md](.github/SETUP.md).
-   - This will:
-      - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
-      - Block force pushes and branch deletion
-      - Enable automatic branch deletion after merge
-
-```bash
-# Configure branch protection (requires GitHub CLI)
-make github
-```
-
-### 2. Customize Your Project
-
-You can customize your project either **automatically using GitHub Actions** (recommended) or manually.
-
-#### Option A: Automatic Customization (Recommended)
-
-Use the GitHub Actions workflow to automatically rename everything:
-
-1. Go to your repository on GitHub
-2. Click on the **Actions** tab
-3. Select **Customize Repository** workflow from the left sidebar
-4. Click **Run workflow** button
-5. Enter your desired names:
+1. Go to your new repository's **Actions** tab on GitHub
+2. Select the **Initialize Repository** workflow
+3. Click the **Run workflow** button
+4. Enter your project's inputs:
    - **Package name**: Python module name with underscores (e.g., `weather_fetcher`)
-   - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `weatherf` or `weather-cli`)
-6. Click **Run workflow**
+   - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `weatherf` or `we-fe`)
+5. Click **Run workflow**
+6. Wait for the job to finish and the success summary to appear
 
 The workflow will:
-- Validate your inputs
+- Validate your inputs (prevents running twice)
 - Rename the package directory
 - Update all configuration files
 - Update all test imports
 - Run linting, formatting, and tests
 - Commit and push the changes
-
-Once complete, pull the changes locally:
-```bash
-git pull
-```
+- Display a summary with next steps at the top of the workflow run page
 
 **You must retain the underscore and hyphen naming conventions.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
 
-#### Option B: Manual Customization
-
-If you prefer to customize manually, rename the package and CLI in the following locations, where:
-- `my_package` should be the name of the package and Python module directory (e.g., `weather_fetcher`)
-- `my-cli` should be the executable name that users type in the terminal (e.g., `weatherf`)
-
-#### **Package Directory**
-
-Rename the root project directory to your package name:
-
-```bash
-mv my_package weather_fetcher
-```
-
-#### `Makefile`
-
-Update `Makefile` variables to your package and CLI name:
-
-```makefile
-PACKAGE_NAME = my_package -> weather_fetcher
-CLI_NAME = my-cli -> weatherf
-```
-
-#### `pyproject.toml`
-
-Update the following project settings to your package and CLI name:
-
-```toml
-[project]
-name = "my-package" -> "weather-fetcher"
-
-[project.scripts]
-my-cli = "my_package.main:app" -> 
-weatherf = "weather_fetcher.main:app" 
-
-[tool.hatch.build.targets.wheel]
-packages = ["my_package"] -> ["weather_fetcher"]
-```
-
-#### **Tests** `tests/*`
-
-Update import statements in `tests/` to your package name:
-
-```python
-# test_greet.py
-# test_mail.py
-from my_package.main import app ->
-from weather_fetcher.main import app
-
-# test_services.py
-from my_package.commands.greet import GreetingService ->
-from weather_fetcher.commands.greet import GreetingService
-
-from my_package.commands.mail import MailService ->
-from weather_fetcher.commands.mail import MailService
-```
-
 ### 3. Validate Your Setup
 
-Run tests to ensure everything is renamed correctly:
+After the workflow completes, pull the changes to your local repository:
 
 ```bash
+# Pull the changes made by the workflow
+git pull
+
+# Install dependencies
+uv sync --dev
+
+make hooks
 make lint
 make format
 make test
 ```
 
-All tests should pass! If they fail, check that you've updated all package and CLI names consistently.
-
-Next, test the actual CLI installation:
+Install the CLI and run a command:
 
 ```bash
 # Install your CLI
 make install
 
-# Run a command
-weatherf greet --names World
+# Run greet command using your CLI name
+my-cli greet --names World
 ```
 
 If the command prints `Hello World`, your setup is complete!
 
+> **Note:** Replace `my-cli` with your actual CLI name that you chose during initialization.
+
+**Optional: Configure GitHub Branch Protection**
+
+Branch protection is optional but recommended to enforce CI checks before merging. See [SETUP.md](.github/SETUP.md).
+
+
+```bash
+# Requires GitHub CLI
+make github
+```
+
+This opinionated command will:
+   - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
+   - Block force pushes and branch deletion
+   - Enable automatic branch deletion after merge
+
+If not configured, the pre-commit hooks will still enforce the CI checks.
+
 ### 4. Build Your CLI
 
-1. Modify or delete example commands in `my_package/commands/`
-2. Update `my_package/main.py` to register your commands
+Now you're ready to customize your CLI application:
+
+1. Modify or delete example commands in `<your_package_name>/commands/`
+2. Update `<your_package_name>/main.py` to register your new commands
 3. Write tests in `tests/`
 4. Run tests: `make test`
-5. Generate usage documentation: `make docs`
-6. Update this `README.md` (below example) and `CONTRIBUTING.md` with your proj
-
-### 5. Clean Up Template Instructions
-
-**Delete everything above this line**
-
-<------------------------------------------------>
-
-# My Package
-
-A brief description of what your CLI does.
-
-## Prerequisites
-
-- [uv](https://github.com/astral-sh/uv) - Python package manager
-
-## Installation
-
-Install this CLI tool globally:
-
-```bash
-make install
-```
-
-Expected output:
-```
-my-cli installed successfully
-```
-
-The CLI will be installed to `~/.local/bin`. Make sure this directory is in your `$PATH`:
-
-```bash
-# Add to your shell profile (.bashrc, .zshrc, etc.)
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-## Usage
-
-See the [usage documentation](./USAGE.md) for all available commands and options.
-
-### Quick Start
-
-```bash
-# Example command
-my-cli greet --names Alice,Bob
-
-# Get help
-my-cli --help
-```
-
-## Development
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
+5. Generate `USAGE.md` documentation: `make docs`
+6. Update the `CONTRIBUTING.md` with your project details
+7. Replace this `README.md` with the `TEMPLATE_README.md` (rename `TEMPLATE_README.md` to `README.md` and customize it for your project)

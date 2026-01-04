@@ -12,6 +12,8 @@ on:
         required: true
         type: string
 
+run-name: Initialize Repository - ${{ inputs.package_name }}
+
 jobs:
   initialize:
     name: Initialize Repository
@@ -24,6 +26,20 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if already initialized
+        run: |
+          if [ ! -d "my_package" ]; then
+            echo "❌ Error: Repository has already been initialized!"
+            echo ""
+            echo "The 'my_package' directory no longer exists, which means this repository"
+            echo "has already been customized. This workflow should only be run once."
+            echo ""
+            echo "If you need to rename your package again, please do so manually or"
+            echo "create a fresh repository from the template."
+            exit 1
+          fi
+          echo "✅ Repository not yet initialized, proceeding..."
 
       - name: Validate inputs
         run: |
@@ -171,3 +187,43 @@ jobs:
           echo "3. Set up pre-commit hooks: make hooks"
           echo "4. Install the CLI: make install"
           echo "5. Test your CLI: ${{ inputs.cli_name }} --help"
+
+          # Add to workflow summary
+          cat >> $GITHUB_STEP_SUMMARY <<'EOF'
+          ## 🎉 Repository Initialization Complete!
+
+          **Configuration:**
+          - 📦 Package name: `${{ inputs.package_name }}`
+          - ⚡ CLI name: `${{ inputs.cli_name }}`
+
+          ### Next Steps
+
+          1. **Pull the latest changes:**
+             ```bash
+             git pull
+             ```
+
+          2. **Install dependencies:**
+             ```bash
+             uv sync --dev
+             ```
+
+          3. **Set up pre-commit hooks:**
+             ```bash
+             make hooks
+             ```
+
+          4. **Install the CLI:**
+             ```bash
+             make install
+             ```
+
+          5. **Test your CLI:**
+             ```bash
+             ${{ inputs.cli_name }} --help
+             ```
+
+          ---
+
+          You're all set! Start building your CLI by modifying the commands in `${{ inputs.package_name }}/commands/`.
+          EOF
