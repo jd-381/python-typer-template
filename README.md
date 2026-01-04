@@ -19,7 +19,7 @@ A production-ready template for building Python CLI applications with [Typer](ht
 ### 1. Create Your Repository from This Template
 
 1. Click the **Use this template** button at the top of this repository
-2. Choose **Create a new repository** then enter a repository name (e.g., `my-package`)
+2. Choose **Create a new repository** then enter a repository name (e.g., `mail-fetcher`)
 
 ### 2. Initialize Your Project
 
@@ -31,7 +31,7 @@ Initialize your project using the GitHub Actions workflow:
 4. Enter your project's inputs:
    - **Package name**: Python module name with underscores (e.g., `mail_fetcher`)
    - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `ma-fe`)
-5. Click **Run workflow**
+5. Click **Run workflow** (the job should show up shortly, otherwise refresh the page)
 6. Wait for the job to finish and the success summary to appear
 
 The workflow will:
