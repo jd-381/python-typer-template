@@ -150,22 +150,11 @@ jobs:
 
       - name: Run validation checks
         run: |
-          # Install dependencies
-          uv sync --dev
+          # Install dependencies and set up hooks
+          make deps
 
-          # Run linter
-          echo "🔍 Running linter..."
-          make lint
-
-          # Run formatter check
-          echo "🎨 Checking formatting..."
-          make format
-
-          # Run tests
-          echo "🧪 Running tests..."
-          make test
-
-          echo "✅ All validation checks passed!"
+          # Run validation (lint, format, test)
+          make validate
 
       - name: Commit changes
         run: |
@@ -198,10 +187,9 @@ jobs:
           echo ""
           echo "Next steps:"
           echo "1. Pull the latest changes: git pull"
-          echo "2. Install dependencies: uv sync --dev"
-          echo "3. Set up pre-commit hooks: make hooks"
-          echo "4. Install the CLI: make install"
-          echo "5. Test your CLI: ${{ inputs.cli_name }} --help"
+          echo "2. Install dependencies and hooks: make deps"
+          echo "3. Install the CLI: make install"
+          echo "4. Test your CLI: ${{ inputs.cli_name }} --help"
 
           # Add to workflow summary
           cat >> $GITHUB_STEP_SUMMARY <<'EOF'
@@ -218,22 +206,17 @@ jobs:
              git pull
              ```
 
-          2. **Install dependencies:**
+          2. **Install dependencies and set up hooks:**
              ```bash
-             uv sync --dev
+             make deps
              ```
 
-          3. **Set up pre-commit hooks:**
-             ```bash
-             make hooks
-             ```
-
-          4. **Install the CLI:**
+          3. **Install the CLI:**
              ```bash
              make install
              ```
 
-          5. **Test your CLI:**
+          4. **Test your CLI:**
              ```bash
              ${{ inputs.cli_name }} --help
              ```
