@@ -1,4 +1,4 @@
-# Python Typer Template
+# Python CLI Template
 
 A production-ready template for building Python CLI applications with [Typer](https://typer.tiangolo.com/).
 

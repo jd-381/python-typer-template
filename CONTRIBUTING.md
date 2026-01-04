@@ -1,6 +1,6 @@
-# Contributing to Python Typer Template
+# Contributing to Python CLI Template
 
-Thank you for your interest in contributing to the Python Typer Template! This guide will help you get started with development and testing.
+Thank you for your interest in contributing to the Python CLI Template! This guide will help you get started with development and testing.
 
 ## Prerequisites
 
@@ -89,7 +89,7 @@ git status
 git diff
 
 # When done, return to main directory and clean up
-cd ../python-typer-template
+cd ../python-cli-template
 git worktree remove ../test-init
 git branch -D test-init-branch  # Delete the test branch if no longer needed
 ```
