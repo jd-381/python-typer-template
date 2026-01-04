@@ -51,14 +51,6 @@ install:
 		echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""; \
 	fi
 
-.PHONY: lint
-lint:
-	uv run ruff check .
-
-.PHONY: test
-test:
-	uv run pytest
-
 .PHONY: init
 test-init:
 	@if ! command -v act > /dev/null 2>&1; then \
@@ -89,6 +81,14 @@ test-init:
 		--input package_name=test_package \
 		--input cli_name=test-cli \
 		--workflows .github/workflows/initialize-repository.yml
+
+.PHONY: lint
+lint:
+	uv run ruff check .
+
+.PHONY: test
+test:
+	uv run pytest
 
 .PHONY: upgrade
 upgrade:

@@ -45,33 +45,25 @@ This command runs all quality checks in sequence, ensuring your code is properly
 
 ### Testing The CLI
 
-To run the template CLI without installing it globally:
+**During development**, use `uv run` to test your changes without installing:
 
-```bash
-uv run template-cli [command]
-```
-
-For example:
 ```bash
 uv run template-cli hello --name World
-uv run template-cli mail fetch
 ```
+
+**To test the installed CLI**, use `make install`:
 
 ```bash
 make install
 ```
 
-This will install the `template-cli` tool globally to `~/.local/bin`. Once installed, you can test it:
+This installs it globally to `~/.local/bin`. Once installed, you can run:
 
 ```bash
 template-cli hello --name World
 ```
 
-You should see:
-
-```
-Hello World
-```
+After making code changes, use `make upgrade` to reinstall with a fresh cache.
 
 **Note:** If the command isn't found, make sure `~/.local/bin` is in your PATH:
 
@@ -91,53 +83,9 @@ The workflow will:
 4. Run linting and formatting
 5. Run the test suite
 
-**⚠️ Important:** This workflow is destructive when testing locally - it will modify files in your working directory. To safely test your changes, create a separate git worktree from your branch.
+**⚠️ Important:** This workflow is destructive when testing locally - it will modify files in your working directory. To safely test your changes, create a git worktree from your branch.
 
 ### Using Git Worktrees for Safe Testing
-
-```bash
-# Create a test-init-branch worktree in the /tmp directory
-git worktree add /tmp test-init-branch
-
-# Navigate to the worktree
-cd /tmp
-
-# Run the initialization workflow with act
-make test-init
-# Or with custom inputs:
-act workflow_dispatch \
-  --input package_name=custom_package \
-  --input cli_name=custom-cli \
-  --workflows .github/workflows/initialize-repository.yml
-
-# Inspect the changes made by the workflow
-git status
-git diff
-
-# When done, return to main directory and clean up
-cd ../python-cli-template
-git worktree remove ../test-init
-git branch -D test-init-branch  # Delete the test branch if no longer needed
-```
-
-```bash
-# Quick test with default inputs
-make test-init
-
-# Or test with custom inputs
-act workflow_dispatch \
-  --input package_name=custom_package \
-  --input cli_name=custom-cli \
-  --workflows .github/workflows/initialize-repository.yml
-```
-
-
-
-If any step fails, the workflow has a bug that needs to be fixed.
-
-
-
-
 
 **Why use worktrees?**
 - Isolates destructive changes to a separate directory
@@ -152,6 +100,30 @@ If any step fails, the workflow has a bug that needs to be fixed.
 4. Verify the workflow completed successfully and files were updated correctly
 5. Clean up the worktree
 6. Commit your workflow changes in the main directory
+
+**Example commands:**
+
+```bash
+# Create a worktree
+git worktree add ../tmp test-init
+
+# Navigate to the worktree
+cd ../tmp
+
+# Run the initialization workflow with act
+make init
+
+# Inspect the changes made by the workflow
+git status
+git diff
+
+# When done, return to main directory and clean up
+cd ../python-cli-template
+git worktree remove ../test-init
+git branch -D test-init
+```
+
+If any step fails, the initialize workflow has a bug that needs to be fixed.
 
 ### Testing Other Workflows
 
@@ -217,10 +189,10 @@ Run `make` to see all available commands.
 | `make docs` | Generate CLI usage documentation to `USAGE.md` |
 | `make format` | Format code with Ruff formatter |
 | `make github` | Configure GitHub branch protection rules (requires GitHub CLI) |
+| `make init` | Test initialization workflow locally with act |
 | `make install` | Install CLI tool globally to `~/.local/bin` |
 | `make lint` | Check code with Ruff linter (without modifying files) |
 | `make test` | Run test suite with pytest |
-| `make init` | Test initialization workflow locally with act |
 | `make upgrade` | Reinstall CLI tool (clears cache and forces fresh install) |
 | `make validate` | Run lint, format, and test |
 
@@ -259,27 +231,27 @@ Common workflow changes:
 
 ```
 .
-├── template_package/                      # Template package (gets renamed)
-│   ├── commands/                    # CLI command modules
-│   ├── common/                      # Shared utilities
-│   ├── models/                      # Data models
-│   └── main.py                      # CLI entry point
-├── tests/                           # Test suite
+├── template_package/                 # Template package (gets renamed)
+│   ├── commands/                     # CLI command modules
+│   ├── common/                       # Shared utilities
+│   ├── models/                       # Data models
+│   └── main.py                       # CLI entry point
+├── tests/                            # Test suite
 ├── .github/
 │   ├── workflows/
-│   │   ├── initialize-repository.yml  # Main initialization workflow
-│   │   ├── ci.yml                     # CI workflow
-│   │   └── README.md                  # Workflow testing guide
-│   └── setup-branch-protection.sh   # Branch protection setup script
-├── .pre-commit-config.yaml          # Pre-commit hooks configuration
-├── pyproject.toml                   # Project configuration
-├── Makefile                         # Development commands
-├── README.md                        # Template repository documentation
-├── TEMPLATE_README.md               # README for initialized projects
-├── CONTRIBUTING.md                  # This file - for template contributors
-├── TEMPLATE_CONTRIBUTING.md         # CONTRIBUTING for initialized projects
-├── USAGE.md                         # Generated CLI documentation
-└── uv.lock                          # Locked dependencies
+│   │   ├── initialize-repository.yml # Main initialization workflow
+│   │   ├── ci.yml                    # CI workflow
+│   │   └── SETUP.md                  # Workflow testing guide
+│   └── setup-branch-protection.sh    # Branch protection setup script
+├── .pre-commit-config.yaml           # Pre-commit hooks configuration
+├── pyproject.toml                    # Project configuration
+├── Makefile                          # Development commands
+├── README.md                         # Template repository documentation
+├── TEMPLATE_README.md                # README for initialized projects
+├── CONTRIBUTING.md                   # This file - for template contributors
+├── TEMPLATE_CONTRIBUTING.md          # CONTRIBUTING for initialized projects
+├── USAGE.md                          # Generated CLI documentation
+└── uv.lock                           # Locked dependencies
 ```
 
 ## Testing Strategy
@@ -292,7 +264,7 @@ Common workflow changes:
 ### Integration Tests
 - The initialization workflow itself serves as an integration test
 - Tests that all pieces work together after template instantiation
-- Run with `make test-init`
+- Run with `make init`
 
 ### Pre-commit Hooks
 - Automatic checks before each commit
@@ -302,8 +274,6 @@ Common workflow changes:
 ## Code Style
 
 This project uses Ruff for both linting and formatting with a line length of 120 characters. The configuration is in `pyproject.toml`.
-
-
 
 ## Questions?
 
