@@ -1,11 +1,11 @@
-# `my-cli`
+# `template-cli`
 
 A CLI application demonstrating Typer best practices with commands and subcommands.
 
 **Usage**:
 
 ```console
-$ my-cli [OPTIONS] COMMAND [ARGS]...
+$ template-cli [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -18,14 +18,14 @@ $ my-cli [OPTIONS] COMMAND [ARGS]...
 * `hello`: Greet someone in various languages
 * `mail`: Manage and interact with email messages
 
-## `my-cli hello`
+## `template-cli hello`
 
 Greet someone in various languages
 
 **Usage**:
 
 ```console
-$ my-cli hello [OPTIONS] COMMAND [ARGS]...
+$ template-cli hello [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -35,14 +35,14 @@ $ my-cli hello [OPTIONS] COMMAND [ARGS]...
 * `--debug`: Print debug messages
 * `--help`: Show this message and exit.
 
-## `my-cli mail`
+## `template-cli mail`
 
 Manage and interact with email messages
 
 **Usage**:
 
 ```console
-$ my-cli mail [OPTIONS] COMMAND [ARGS]...
+$ template-cli mail [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -55,14 +55,14 @@ $ my-cli mail [OPTIONS] COMMAND [ARGS]...
 * `fetch`: Fetch mail
 * `error`: Show example error
 
-### `my-cli mail delete`
+### `template-cli mail delete`
 
 Delete mail
 
 **Usage**:
 
 ```console
-$ my-cli mail delete [OPTIONS]
+$ template-cli mail delete [OPTIONS]
 ```
 
 **Options**:
@@ -71,14 +71,14 @@ $ my-cli mail delete [OPTIONS]
 * `--debug`: Print debug messages
 * `--help`: Show this message and exit.
 
-### `my-cli mail fetch`
+### `template-cli mail fetch`
 
 Fetch mail
 
 **Usage**:
 
 ```console
-$ my-cli mail fetch [OPTIONS]
+$ template-cli mail fetch [OPTIONS]
 ```
 
 **Options**:
@@ -86,14 +86,14 @@ $ my-cli mail fetch [OPTIONS]
 * `--debug`: Print debug messages
 * `--help`: Show this message and exit.
 
-### `my-cli mail error`
+### `template-cli mail error`
 
 Show example error
 
 **Usage**:
 
 ```console
-$ my-cli mail error [OPTIONS]
+$ template-cli mail error [OPTIONS]
 ```
 
 **Options**:

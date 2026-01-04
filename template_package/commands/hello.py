@@ -15,9 +15,9 @@ from typing import Annotated
 
 import typer
 
-from my_package.common.cli_utils import DEBUG_OPTION
-from my_package.common.logger_utils import cyan
-from my_package.models.language import Language
+from template_package.common.cli_utils import DEBUG_OPTION
+from template_package.common.logger_utils import cyan
+from template_package.models.language import Language
 
 LOGGER = logging.getLogger(__name__)
 

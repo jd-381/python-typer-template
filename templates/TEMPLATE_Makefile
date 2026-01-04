@@ -1,5 +1,5 @@
-PACKAGE_NAME = my_package
-CLI_NAME = my-cli
+PACKAGE_NAME = template_package
+CLI_NAME = template-cli
 
 .PHONY: help
 help:
@@ -8,7 +8,6 @@ help:
 	@echo "  make docs         - Generate CLI usage documentation"
 	@echo "  make format       - Format code with Ruff"
 	@echo "  make github       - Configure GitHub branch protection rules"
-	@echo "  make hooks        - Install pre-commit git hooks"
 	@echo "  make install      - Install CLI tool globally"
 	@echo "  make lint         - Check code with Ruff linter"
 	@echo "  make test         - Run test suite with pytest"
@@ -39,10 +38,6 @@ github:
 	fi
 	@echo "Configuring GitHub branch protection rules..."
 	@./.github/setup-branch-protection.sh
-
-.PHONY: hooks
-hooks:
-	uv run pre-commit install
 
 .PHONY: install
 install:

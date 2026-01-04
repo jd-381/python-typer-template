@@ -1,6 +1,6 @@
-# my_package
+# template_package
 
-A brief description of what my-cli does.
+A brief description of what template-cli does.
 
 ## Prerequisites
 
@@ -8,7 +8,7 @@ A brief description of what my-cli does.
 
 ## Installation
 
-Install my-cli:
+Install template-cli:
 
 ```bash
 make install
@@ -17,7 +17,7 @@ make install
 Expected output:
 
 ```
-my-cli installed successfully
+template-cli installed successfully
 ```
 
 The CLI is installed to `~/.local/bin`. Make sure this directory is in your `$PATH`:
@@ -35,10 +35,10 @@ See the [usage documentation](./USAGE.md) for all available commands and options
 
 ```bash
 # See commands
-my-cli --help
+template-cli --help
 
 # Example command
-my-cli hello --name World
+template-cli hello --name World
 ```
 
 ## Development

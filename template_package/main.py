@@ -20,12 +20,12 @@ from typing import Annotated
 import typer
 from rich.logging import RichHandler
 
-from my_package.commands.hello import app as hello
-from my_package.commands.mail import app as mail
+from template_package.commands.hello import app as hello
+from template_package.commands.mail import app as mail
 
 # Get version from pyproject.toml via package metadata
 # This is the recommended best practice - single source of truth
-__version__ = version("my-package")
+__version__ = version("template-package")
 
 # Configure Rich logging for beautiful, formatted console output
 logging.basicConfig(level=logging.INFO, format="%(message)s", handlers=[RichHandler(markup=True)])
@@ -46,7 +46,7 @@ def version_callback(value: bool) -> None:
     This callback is triggered when the user passes --version flag.
     """
     if value:
-        typer.echo(f"my-cli version {__version__}")
+        typer.echo(f"template-cli version {__version__}")
         raise typer.Exit()
 
 
@@ -74,6 +74,6 @@ app.add_typer(mail, name="mail", help="Manage and interact with email messages")
 
 
 if __name__ == "__main__":
-    # This allows running the module directly with: python -m my_package.main
+    # This allows running the module directly with: python -m template_package.main
     # Useful for development and debugging
     app()

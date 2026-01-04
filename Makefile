@@ -1,5 +1,5 @@
-PACKAGE_NAME = my_package
-CLI_NAME = my-cli
+PACKAGE_NAME = template_package
+CLI_NAME = template-cli
 
 .PHONY: help
 help:
@@ -8,11 +8,10 @@ help:
 	@echo "  make docs         - Generate CLI usage documentation"
 	@echo "  make format       - Format code with Ruff"
 	@echo "  make github       - Configure GitHub branch protection rules"
-	@echo "  make hooks        - Install pre-commit git hooks"
 	@echo "  make install      - Install CLI tool globally"
 	@echo "  make lint         - Check code with Ruff linter"
 	@echo "  make test         - Run test suite with pytest"
-	@echo "  make test-init    - Test initialization workflow locally with act"
+	@echo "  make init         - Test initialization workflow locally with act"
 	@echo "  make upgrade      - Reinstall CLI tool (clears cache)"
 	@echo "  make validate     - Run lint, format, and test"
 
@@ -41,10 +40,6 @@ github:
 	@echo "Configuring GitHub branch protection rules..."
 	@./.github/setup-branch-protection.sh
 
-.PHONY: hooks
-hooks:
-	uv run pre-commit install
-
 .PHONY: install
 install:
 	uv tool install .
@@ -56,15 +51,7 @@ install:
 		echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""; \
 	fi
 
-.PHONY: lint
-lint:
-	uv run ruff check .
-
-.PHONY: test
-test:
-	uv run pytest
-
-.PHONY: test-init
+.PHONY: init
 test-init:
 	@if ! command -v act > /dev/null 2>&1; then \
 		echo "Error: act is not installed"; \
@@ -94,6 +81,14 @@ test-init:
 		--input package_name=test_package \
 		--input cli_name=test-cli \
 		--workflows .github/workflows/initialize-repository.yml
+
+.PHONY: lint
+lint:
+	uv run ruff check .
+
+.PHONY: test
+test:
+	uv run pytest
 
 .PHONY: upgrade
 upgrade:

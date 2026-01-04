@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       package_name:
-        description: 'Python package name (e.g., mail_fetcher) - must use underscores'
+        description: "Python package name (e.g., mail_fetcher) - must use underscores"
         required: true
         type: string
       cli_name:
-        description: 'CLI executable name (e.g., ma-fe) - must use hyphens if multi-word'
+        description: "CLI executable name (e.g., ma-fe) - must use hyphens if multi-word"
         required: true
         type: string
 
@@ -29,10 +29,10 @@ jobs:
 
       - name: Check if already initialized
         run: |
-          if [ ! -d "my_package" ]; then
+          if [ ! -d "template_package" ]; then
             echo "❌ Error: Repository has already been initialized!"
             echo ""
-            echo "The 'my_package' directory no longer exists, which means this repository"
+            echo "The 'template_package' directory no longer exists, which means this repository"
             echo "has already been customized. This workflow should only be run once."
             echo ""
             echo "If you need to rename your package again, please do so manually or"
@@ -78,17 +78,17 @@ jobs:
 
       - name: Rename package directory
         run: |
-          if [ -d "my_package" ]; then
-            mv my_package "${{ inputs.package_name }}"
-            echo "✅ Renamed my_package/ to ${{ inputs.package_name }}/"
+          if [ -d "template_package" ]; then
+            mv template_package "${{ inputs.package_name }}"
+            echo "✅ Renamed template_package/ to ${{ inputs.package_name }}/"
           else
-            echo "⚠️  my_package directory not found, skipping"
+            echo "⚠️  template_package directory not found, skipping"
           fi
 
       - name: Update Makefile
         run: |
-          sed -i 's/^PACKAGE_NAME = my_package$/PACKAGE_NAME = ${{ inputs.package_name }}/' Makefile
-          sed -i 's/^CLI_NAME = my-cli$/CLI_NAME = ${{ inputs.cli_name }}/' Makefile
+          sed -i 's/^PACKAGE_NAME = template_package$/PACKAGE_NAME = ${{ inputs.package_name }}/' Makefile
+          sed -i 's/^CLI_NAME = template-cli$/CLI_NAME = ${{ inputs.cli_name }}/' Makefile
           echo "✅ Updated Makefile"
 
       - name: Update pyproject.toml
@@ -98,13 +98,13 @@ jobs:
           DIST_NAME="${DIST_NAME//_/-}"
 
           # Update project name
-          sed -i "s/^name = \"my-package\"$/name = \"$DIST_NAME\"/" pyproject.toml
+          sed -i "s/^name = \"template-package\"$/name = \"$DIST_NAME\"/" pyproject.toml
 
           # Update CLI script entry point
-          sed -i "s/^my-cli = \"my_package\.main:app\"$/${{ inputs.cli_name }} = \"${{ inputs.package_name }}.main:app\"/" pyproject.toml
+          sed -i "s/^template-cli = \"template_package\.main:app\"$/${{ inputs.cli_name }} = \"${{ inputs.package_name }}.main:app\"/" pyproject.toml
 
           # Update packages list
-          sed -i "s/^packages = \[\"my_package\"\]$/packages = [\"${{ inputs.package_name }}\"]/" pyproject.toml
+          sed -i "s/^packages = \[\"template_package\"\]$/packages = [\"${{ inputs.package_name }}\"]/" pyproject.toml
 
           echo "✅ Updated pyproject.toml"
 
@@ -115,15 +115,15 @@ jobs:
           DIST_NAME="${DIST_NAME//_/-}"
 
           # Update all Python files in tests directory
-          find tests -name "*.py" -type f -exec sed -i "s/from my_package\./from ${{ inputs.package_name }}./g" {} +
-          find tests -name "*.py" -type f -exec sed -i "s/import my_package/import ${{ inputs.package_name }}/g" {} +
+          find tests -name "*.py" -type f -exec sed -i "s/from template_package\./from ${{ inputs.package_name }}./g" {} +
+          find tests -name "*.py" -type f -exec sed -i "s/import template_package/import ${{ inputs.package_name }}/g" {} +
 
           # Update all Python files in package directory
-          find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/from my_package\./from ${{ inputs.package_name }}./g" {} +
-          find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/import my_package/import ${{ inputs.package_name }}/g" {} +
+          find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/from template_package\./from ${{ inputs.package_name }}./g" {} +
+          find "${{ inputs.package_name }}" -name "*.py" -type f -exec sed -i "s/import template_package/import ${{ inputs.package_name }}/g" {} +
 
           # Update version() call in main.py to use the distribution name
-          sed -i "s/version(\"my-package\")/version(\"$DIST_NAME\")/" "${{ inputs.package_name }}/main.py"
+          sed -i "s/version(\"template-package\")/version(\"$DIST_NAME\")/" "${{ inputs.package_name }}/main.py"
 
           echo "✅ Updated imports and version() call in package files"
 
