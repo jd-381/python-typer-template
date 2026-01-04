@@ -1,6 +1,6 @@
-# My Package
+# my_package
 
-A brief description of what your CLI does.
+A brief description of what my-cli does.
 
 ## Prerequisites
 
@@ -8,18 +8,19 @@ A brief description of what your CLI does.
 
 ## Installation
 
-Install this CLI tool globally:
+Install my-cli:
 
 ```bash
 make install
 ```
 
 Expected output:
+
 ```
 my-cli installed successfully
 ```
 
-The CLI will be installed to `~/.local/bin`. Make sure this directory is in your `$PATH`:
+The CLI is installed to `~/.local/bin`. Make sure this directory is in your `$PATH`:
 
 ```bash
 # Add to your shell profile (.bashrc, .zshrc, etc.)
@@ -33,11 +34,11 @@ See the [usage documentation](./USAGE.md) for all available commands and options
 ### Quick Start
 
 ```bash
-# Example command
-my-cli greet --names Alice,Bob
-
-# Get help
+# See commands
 my-cli --help
+
+# Example command
+my-cli hello --name World
 ```
 
 ## Development
