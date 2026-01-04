@@ -3,8 +3,8 @@
 import pytest
 from typer.testing import CliRunner
 
-from my_package.main import app
-from my_package.models.mail import Mail, mail_data
+from template_package.main import app
+from template_package.models.mail import Mail, mail_data
 
 runner = CliRunner()
 

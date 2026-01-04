@@ -3,7 +3,7 @@ from typing import Annotated
 
 import typer
 
-from my_package.common.logger_utils import yellow
+from template_package.common.logger_utils import yellow
 
 
 def validate_user_input_debug(input: bool) -> bool:

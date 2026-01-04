@@ -9,72 +9,98 @@ Thank you for your interest in contributing to the Python CLI Template! This gui
 
 ## Development Setup
 
-### 1. Install Dependencies
+### Install Dependencies
 
 ```bash
 make deps
 ```
 
 This will:
+
 - Install runtime dependencies (Typer)
 - Install development dependencies (pytest, ruff, typer-cli, pre-commit)
 - Set up pre-commit git hooks
 
 The pre-commit hooks will automatically:
+
 - Format code with Ruff
 - Lint code with Ruff
 - Run the test suite
 - Generate documentation (fails if `USAGE.md` was edited manually)
 
-### 2. Install act for Testing Workflows
 
-The initialization workflow is a critical part of this template. We use `act` to test it locally before pushing changes.
-
-**Install act:**
-```bash
-# macOS
-brew install act
-
-# Linux
-curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
-```
-
-## Testing Workflows
-
-### Test the Initialization Workflow
-
-The initialization workflow is the most important part of this template. Always test it after making changes:
+### Validate Setup
 
 ```bash
-# Quick test with default inputs
-make test-init
-
-# Or test with custom inputs
-act workflow_dispatch \
-  --input package_name=custom_package \
-  --input cli_name=custom-cli \
-  --workflows .github/workflows/initialize-repository.yml
+make validate
 ```
 
-The test will:
+This will:
+
+- Check code with Ruff linter (`make lint`)
+- Format code with Ruff formatter (`make format`)
+- Run the test suite with pytest (`make test`)
+
+This command runs all quality checks in sequence, ensuring your code is properly linted, formatted, and tested. It's the same set of checks that pre-commit hooks run, making it useful for verifying your setup or manually validating changes before committing.
+
+### Testing The CLI
+
+To run the template CLI without installing it globally:
+
+```bash
+uv run template-cli [command]
+```
+
+For example:
+```bash
+uv run template-cli hello --name World
+uv run template-cli mail fetch
+```
+
+```bash
+make install
+```
+
+This will install the `template-cli` tool globally to `~/.local/bin`. Once installed, you can test it:
+
+```bash
+template-cli hello --name World
+```
+
+You should see:
+
+```
+Hello World
+```
+
+**Note:** If the command isn't found, make sure `~/.local/bin` is in your PATH:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+## Initialize Repository Workflow
+
+The **Initialize Repository** workflow is a critical part of this template. We use `act` to test it locally before pushing changes.
+
+The workflow will:
+
 1. Rename the package directory
 2. Update all configuration files
 3. Update imports in all Python files
 4. Run linting and formatting
 5. Run the test suite
 
-If any step fails, the workflow has a bug that needs to be fixed.
+**⚠️ Important:** This workflow is destructive when testing locally - it will modify files in your working directory. To safely test your changes, create a separate git worktree from your branch.
 
 ### Using Git Worktrees for Safe Testing
 
-**⚠️ Important:** The initialization workflow is destructive - it modifies files in the repository. To safely test it without affecting your main working directory, use git worktrees:
-
 ```bash
-# Create a worktree in a separate directory for testing
-git worktree add ../test-init test-init-branch
+# Create a test-init-branch worktree in the /tmp directory
+git worktree add /tmp test-init-branch
 
 # Navigate to the worktree
-cd ../test-init
+cd /tmp
 
 # Run the initialization workflow with act
 make test-init
@@ -93,6 +119,25 @@ cd ../python-cli-template
 git worktree remove ../test-init
 git branch -D test-init-branch  # Delete the test branch if no longer needed
 ```
+
+```bash
+# Quick test with default inputs
+make test-init
+
+# Or test with custom inputs
+act workflow_dispatch \
+  --input package_name=custom_package \
+  --input cli_name=custom-cli \
+  --workflows .github/workflows/initialize-repository.yml
+```
+
+
+
+If any step fails, the workflow has a bug that needs to be fixed.
+
+
+
+
 
 **Why use worktrees?**
 - Isolates destructive changes to a separate directory
@@ -142,14 +187,14 @@ act -l
 The workflow in [.github/workflows/initialize-repository.yml](.github/workflows/initialize-repository.yml) performs these critical operations:
 
 1. **Validation** - Ensures package_name uses underscores, cli_name is valid
-2. **Package Renaming** - Renames `my_package/` to user's package name
+2. **Package Renaming** - Renames `template_package/` to user's package name
 3. **Configuration Updates** - Updates Makefile and pyproject.toml
 4. **Import Updates** - Updates all Python imports across the codebase
 5. **Version Update** - Updates the `version()` call in main.py to use the distribution name
 6. **Validation Checks** - Runs lint, format, and test to ensure everything works
 
 **Common Issues to Watch For:**
-- Forgetting to update a reference to `my_package` or `my-package`
+- Forgetting to update a reference to `template_package` or `template-package`
 - Not handling the underscore-to-hyphen conversion for distribution names
 - Missing imports in new files
 - Not testing that the package metadata is accessible after initialization
@@ -172,11 +217,10 @@ Run `make` to see all available commands.
 | `make docs` | Generate CLI usage documentation to `USAGE.md` |
 | `make format` | Format code with Ruff formatter |
 | `make github` | Configure GitHub branch protection rules (requires GitHub CLI) |
-| `make hooks` | Install pre-commit git hooks for automatic quality checks |
 | `make install` | Install CLI tool globally to `~/.local/bin` |
 | `make lint` | Check code with Ruff linter (without modifying files) |
 | `make test` | Run test suite with pytest |
-| `make test-init` | Test initialization workflow locally with act |
+| `make init` | Test initialization workflow locally with act |
 | `make upgrade` | Reinstall CLI tool (clears cache and forces fresh install) |
 | `make validate` | Run lint, format, and test |
 
@@ -215,7 +259,7 @@ Common workflow changes:
 
 ```
 .
-├── my_package/                      # Template package (gets renamed)
+├── template_package/                      # Template package (gets renamed)
 │   ├── commands/                    # CLI command modules
 │   ├── common/                      # Shared utilities
 │   ├── models/                      # Data models
@@ -259,19 +303,7 @@ Common workflow changes:
 
 This project uses Ruff for both linting and formatting with a line length of 120 characters. The configuration is in `pyproject.toml`.
 
-## Running the Template CLI During Development
 
-To run the template CLI without installing it globally:
-
-```bash
-uv run my-cli [command]
-```
-
-For example:
-```bash
-uv run my-cli hello --name World
-uv run my-cli mail fetch
-```
 
 ## Questions?
 

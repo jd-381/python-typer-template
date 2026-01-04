@@ -65,8 +65,8 @@ Install the CLI and run a command:
 make install
 
 # Run hello command
-# Replace my-cli with your CLI name chosen during initialization
-my-cli hello --name World
+# Replace template-cli with your CLI name chosen during initialization
+template-cli hello --name World
 ```
 
 If the command prints `Hello World`, your setup is complete!

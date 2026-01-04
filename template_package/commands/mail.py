@@ -15,8 +15,8 @@ from typing import Annotated
 
 import typer
 
-from my_package.common.cli_utils import DEBUG_OPTION
-from my_package.models.mail import Mail, mail_data
+from template_package.common.cli_utils import DEBUG_OPTION
+from template_package.models.mail import Mail, mail_data
 
 LOGGER = logging.getLogger(__name__)
 

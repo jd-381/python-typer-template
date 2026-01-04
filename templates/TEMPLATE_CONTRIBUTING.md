@@ -129,7 +129,7 @@ Installs your CLI tool globally using `uv tool install`. The tool will be availa
 make install
 
 # Then use your CLI
-my-cli hello --name World
+template-cli hello --name World
 ```
 
 **Note:** If the command isn't found, add `~/.local/bin` to your PATH:
@@ -190,14 +190,14 @@ make upgrade
 To run the CLI without installing it globally:
 
 ```bash
-uv run my-cli [command]
+uv run template-cli [command]
 ```
 
 For example:
 
 ```bash
-uv run my-cli hello --name World
-uv run my-cli mail fetch
+uv run template-cli hello --name World
+uv run template-cli mail fetch
 ```
 
 ## Writing Tests
@@ -212,7 +212,7 @@ Example test structure:
 
 ```python
 from typer.testing import CliRunner
-from my_package.main import app
+from template_package.main import app
 
 runner = CliRunner()
 
@@ -230,7 +230,7 @@ This project uses Ruff for both linting and formatting with a line length of 120
 
 ```
 .
-├── my_package/             # Main package
+├── template_package/             # Main package
 │   ├── commands/           # CLI command modules
 │   ├── common/             # Shared utilities
 │   ├── models/             # Data models
