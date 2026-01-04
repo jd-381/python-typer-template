@@ -1,41 +1,68 @@
+"""
+Example of a command with multiple subcommands.
+
+This module demonstrates how to create a Typer app with multiple subcommands.
+The key configuration is:
+- invoke_without_command=False: Requires a subcommand to be specified
+- no_args_is_help=True: Shows help text when no subcommand is provided
+
+For a single command without subcommands, see commands/hello.py instead.
+"""
+
 import logging
 from logging import Logger
 from typing import Annotated
 
 import typer
 
-from ..common.cli_utils import DEBUG_OPTION
-from ..models.mail import Mail, mail_data
+from my_package.common.cli_utils import DEBUG_OPTION
+from my_package.models.mail import Mail, mail_data
 
 LOGGER = logging.getLogger(__name__)
 
+# Multi-subcommand configuration: requires user to specify a subcommand
 app = typer.Typer(invoke_without_command=False, no_args_is_help=True)
 
 
 class MailService:
+    """Service for managing mail operations (fetch, delete)."""
+
     def __init__(self, logger: Logger):
         self._logger: Logger = logger
 
-    def delete(self, count: int) -> int:
-        self._logger.info(f"Deleted {count} messages")
-        remaining_messages: int = max(0, len(mail_data) - count)
-        self._logger.debug(f"{remaining_messages} messages remain")
-        return count
+    def delete(self, count: int) -> None:
+        """Delete a specified number of messages from the mail data.
+
+        Args:
+            count: Number of messages to delete
+        """
+        self._logger.debug("Deleting messages")
+        del mail_data[:count]
+        self._logger.info(f"Done! {len(mail_data)} remaining messages")
 
     def fetch(self) -> list[Mail]:
+        """Fetch all available mail messages.
+
+        Returns:
+            List of Mail objects
+        """
         self._logger.debug("Fetching mail")
         return mail_data
 
 
 @app.command(name="delete", help="Delete mail")
 def delete(
-    count: Annotated[int, typer.Option("--count", "-c", help="Number of messages to delete")] = 1,
+    count: Annotated[int, typer.Option("--count", "-c", help="Number of messages to delete")],
     debug: DEBUG_OPTION = False,
 ) -> None:
+    """Delete a specified number of mail messages.
+
+    This is a subcommand of the mail command. It demonstrates how to delete
+    messages from the mail data store.
+    """
     try:
         svc: MailService = MailService(LOGGER)
-        deleted: int = svc.delete(count)
-        print(f"Deleted {deleted} messages")
+        svc.delete(count)
     except Exception as e:
         LOGGER.error(e)
         raise typer.Exit(code=1)
@@ -43,9 +70,15 @@ def delete(
 
 @app.command(name="fetch", help="Fetch mail")
 def fetch(debug: DEBUG_OPTION = False) -> None:
+    """Fetch and display all mail messages.
+
+    This is a subcommand of the mail command. It retrieves all available
+    messages and displays them to the user.
+    """
     try:
         svc: MailService = MailService(LOGGER)
         mail: list[Mail] = svc.fetch()
+        print(f"{len(mail)} new messages!\n")
         for m in mail:
             print(m)
     except Exception as e:
@@ -55,6 +88,11 @@ def fetch(debug: DEBUG_OPTION = False) -> None:
 
 @app.command(name="error", help="Show example error")
 def error() -> None:
+    """Demonstrate error handling in a Typer command.
+
+    This is a subcommand of the mail command. It shows how exceptions
+    are caught and logged, then exits with a non-zero code.
+    """
     try:
         raise Exception("This is an example error message")
     except Exception as e:

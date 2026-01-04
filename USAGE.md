@@ -1,5 +1,7 @@
 # `my-cli`
 
+A CLI application demonstrating Typer best practices with commands and subcommands.
+
 **Usage**:
 
 ```console
@@ -8,33 +10,34 @@ $ my-cli [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
+* `-v, --version`: Show version
 * `--help`: Show this message and exit.
 
 **Commands**:
 
-* `greet`: No command example
-* `mail`: Multiple command example
+* `hello`: Greet someone in various languages
+* `mail`: Manage and interact with email messages
 
-## `my-cli greet`
+## `my-cli hello`
 
-No command example
+Greet someone in various languages
 
 **Usage**:
 
 ```console
-$ my-cli greet [OPTIONS] COMMAND [ARGS]...
+$ my-cli hello [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
 
-* `-n, --names TEXT`: Comma-separated list of names  [required]
-* `-g, --greeting TEXT`: Greeting  [default: Hello]
+* `-n, --name TEXT`: Name to greet  [required]
+* `-l, --language [english|spanish]`: Language for greeting  [default: english]
 * `--debug`: Print debug messages
 * `--help`: Show this message and exit.
 
 ## `my-cli mail`
 
-Multiple command example
+Manage and interact with email messages
 
 **Usage**:
 
@@ -64,7 +67,7 @@ $ my-cli mail delete [OPTIONS]
 
 **Options**:
 
-* `-c, --count INTEGER`: Number of messages to delete  [default: 1]
+* `-c, --count INTEGER`: Number of messages to delete  [required]
 * `--debug`: Print debug messages
 * `--help`: Show this message and exit.
 

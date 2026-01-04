@@ -18,8 +18,8 @@ A production-ready template for building Python CLI applications with [Typer](ht
 
 ### 1. Create Your Repository from This Template
 
-1. Click the `Use this template` button at the top of this repository
-2. Choose `Create a new repository` then a repository name (e.g., `my-package`)
+1. Click the **Use this template** button at the top of this repository
+2. Choose **Create a new repository** then enter a repository name (e.g., `my-package`)
 
 ### 2. Initialize Your Project
 
@@ -29,8 +29,8 @@ Initialize your project using the GitHub Actions workflow:
 2. Select the **Initialize Repository** workflow
 3. Click the **Run workflow** button
 4. Enter your project's inputs:
-   - **Package name**: Python module name with underscores (e.g., `weather_fetcher`)
-   - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `weatherf` or `we-fe`)
+   - **Package name**: Python module name with underscores (e.g., `mail_fetcher`)
+   - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `ma-fe`)
 5. Click **Run workflow**
 6. Wait for the job to finish and the success summary to appear
 
@@ -38,25 +38,23 @@ The workflow will:
 - Validate your inputs (prevents running twice)
 - Rename the package directory
 - Update all configuration files
-- Update all test imports
+- Update all imports
 - Run linting, formatting, and tests
 - Commit and push the changes
 - Display a summary with next steps at the top of the workflow run page
 
-**You must retain the underscore and hyphen naming conventions.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
+**You must retain the underscore and hyphen naming.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
 
 ### 3. Validate Your Setup
 
-After the workflow completes, pull the changes to your local repository:
+After the workflow completes, set up your local repository for development (either clone or pull the workflow's changes):
 
 ```bash
-# Pull the changes made by the workflow
-git pull
-
 # Install dependencies
 uv sync --dev
-
 make hooks
+
+# Validate initialization
 make lint
 make format
 make test
@@ -65,16 +63,15 @@ make test
 Install the CLI and run a command:
 
 ```bash
-# Install your CLI
+# Installs to ~/.local/bin
 make install
 
-# Run greet command using your CLI name
-my-cli greet --names World
+# Run hello command
+# Replace my-cli with your CLI name chosen during initialization
+my-cli hello --name World
 ```
 
 If the command prints `Hello World`, your setup is complete!
-
-> **Note:** Replace `my-cli` with your actual CLI name that you chose during initialization.
 
 **Optional: Configure GitHub Branch Protection**
 
@@ -91,16 +88,20 @@ This opinionated command will:
    - Block force pushes and branch deletion
    - Enable automatic branch deletion after merge
 
-If not configured, the pre-commit hooks will still enforce the CI checks.
+_If not configured, the pre-commit hooks will still enforce the CI checks._
 
 ### 4. Build Your CLI
 
-Now you're ready to customize your CLI application:
+Now you're ready to customize your CLI application. See [CONTRIBUTING.md](CONTRIBUTING.md) for a detailed developer worfklow.
 
-1. Modify or delete example commands in `<your_package_name>/commands/`
-2. Update `<your_package_name>/main.py` to register your new commands
+High-level next steps:
+
+1. Write new commands in `<your_package_name>/commands/`
+2. Register your new commands in `<your_package_name>/main.py`
 3. Write tests in `tests/`
 4. Run tests: `make test`
+5. Ensure code quality `make lint`, `make format`
 5. Generate `USAGE.md` documentation: `make docs`
 6. Update the `CONTRIBUTING.md` with your project details
-7. Replace this `README.md` with the `TEMPLATE_README.md` (rename `TEMPLATE_README.md` to `README.md` and customize it for your project)
+7. Update `TEMPLATE_README.md` with project details for your users
+7. Replace this `README.md` with `TEMPLATE_README.md`

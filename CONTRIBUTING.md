@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to this project! This guide will help you get started with development.
+This guide will help you get started with development.
 
 ## Prerequisites
 
@@ -8,7 +8,8 @@ Thank you for your interest in contributing to this project! This guide will hel
 
 ## Development Setup
 
-1. Install dependencies:
+Install dependencies:
+
 ```bash
 uv sync --dev
 ```
@@ -17,61 +18,85 @@ This will install:
 - Runtime dependencies (Typer)
 - Development dependencies (pytest, ruff, typer-cli, pre-commit)
 
-3. Set up git hooks:
+Set up git hooks:
+
 ```bash
 make hooks
 ```
 
-This installs pre-commit hooks that automatically run before each commit to:
+This will install pre-commit hooks that:
 - Format code with Ruff
 - Lint code with Ruff
 - Run the test suite
-- Generate documentation (fails if USAGE.md needs updating)
+- Generate documentation (fails if `USAGE.md` was edited manually)
 
 ## Available Make Commands
 
-The project uses a Makefile to simplify common development tasks:
+The project uses a [Makefile](Makefile) to simplify common development tasks. Run `make` to see all available commands.
 
-### Testing
+### Quick Reference
 
-```bash
-make test
-```
-Runs the test suite using pytest. Tests are located in the `tests/` directory.
+| Command | Description |
+|---------|-------------|
+| `make docs` | Generate CLI usage documentation to `USAGE.md` |
+| `make format` | Format code with Ruff formatter |
+| `make github` | Configure GitHub branch protection rules (requires GitHub CLI) |
+| `make hooks` | Install pre-commit git hooks for automatic quality checks |
+| `make install` | Install CLI tool globally to `~/.local/bin` |
+| `make lint` | Check code with Ruff linter (without modifying files) |
+| `make test` | Run test suite with pytest |
+| `make upgrade` | Reinstall CLI tool (clears cache and forces fresh install) |
 
-### Code Formatting
+### Command Details
 
-```bash
-make format
-```
-Formats all Python code using Ruff formatter. This ensures consistent code style across the project.
+#### `make docs`
+Generates comprehensive CLI documentation using Typer CLI. The output is written to `USAGE.md` and includes:
+- All commands and subcommands
+- Command descriptions and help text
+- Available options and arguments
+- Usage examples
 
-### Linting
-
-```bash
-make lint
-```
-Checks code for style issues and potential errors using Ruff linter.
-
-### Documentation
-
+**Example:**
 ```bash
 make docs
 ```
-Generates CLI usage documentation in `USAGE.md` using Typer's built-in documentation generator.
 
-### Git Hooks
+#### `make format`
+Formats all Python code in the project using Ruff. This modifies files in-place to conform to the configured style guide.
 
+**Example:**
+```bash
+make format
+```
+
+#### `make github`
+Configures GitHub branch protection rules for the `main` branch. This command:
+- Requires GitHub CLI (`gh`) to be installed and authenticated
+- Requires all CI checks to pass before merging
+- Blocks force pushes and branch deletion
+- Enables automatic branch deletion after merge
+
+**Example:**
+```bash
+make github
+```
+
+**Note:** This is optional but recommended for team projects.
+
+#### `make hooks`
+Installs pre-commit hooks that automatically run before each commit. The hooks will:
+- Check code formatting with Ruff
+- Run linting checks
+- Validate your changes before committing
+
+**Example:**
 ```bash
 make hooks
 ```
-Installs pre-commit hooks that run automatically before each commit. The hooks will:
-- Auto-format your code with Ruff
-- Check for linting issues with Ruff
-- Run the test suite
-- Regenerate USAGE.md documentation
 
-**Note:** If the documentation hook fails, it means USAGE.md is out of date. Stage the updated file and commit again:
+**Important:** Run this once after cloning the repository.
+
+**Note:** If the documentation hook fails, it means USAGE.md is out of date (or edited manually). Stage the updated file and commit again:
 ```bash
 git add USAGE.md
 git commit -m "Your message"
@@ -82,27 +107,63 @@ To skip hooks temporarily (not recommended):
 git commit --no-verify
 ```
 
-### Installation
+#### `make install`
+Installs your CLI tool globally using `uv tool install`. The tool will be available in `~/.local/bin`.
 
+**Example:**
 ```bash
 make install
+
+# Then use your CLI
+my-cli hello --name World
 ```
-Installs the CLI tool globally using `uv tool install`. The executable will be available as `my-cli` (or your custom CLI name).
 
-### Upgrade
+**Note:** If the command isn't found, add `~/.local/bin` to your PATH:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
+#### `make lint`
+Runs Ruff linter to check for code quality issues without modifying files. Use this to validate code before committing.
+
+**Example:**
+```bash
+make lint
+```
+
+#### `make test`
+Runs the entire test suite using pytest. Includes all tests in the `tests/` directory.
+
+**Example:**
+```bash
+make test
+
+# Run with verbose output
+uv run pytest -v
+
+# Run specific test file
+uv run pytest tests/test_hello.py
+```
+
+#### `make upgrade`
+Reinstalls the CLI tool with `--force --reinstall` flags. Use this when:
+- You've made changes to the CLI and want to test them
+- The installed version is out of sync with your code
+- You need to clear cached installations
+
+**Example:**
 ```bash
 make upgrade
 ```
-Reinstalls the CLI tool after clearing the uv cache. Use this when you've made changes to the code and `make install` isn't picking them up.
 
 ## Development Workflow
 
 1. Make your changes
-2. Format your code: `make format`
-3. Check for linting issues: `make lint`
-4. Run tests: `make test`
-5. Ensure all tests pass before submitting a PR
+2. Write tests
+3. Format your code: `make format`
+4. Check for linting issues: `make lint`
+5. Run tests: `make test`
+6. Ensure all tests pass before submitting a PR
 
 ## Running the CLI During Development
 
@@ -114,19 +175,19 @@ uv run my-cli [command]
 
 For example:
 ```bash
-uv run my-cli greet --names Alice,Bob
+uv run my-cli hello --name World
 uv run my-cli mail fetch
 ```
 
 ## Writing Tests
 
 Tests use pytest and Typer's `CliRunner` for testing CLI commands. See the `tests/` directory for examples:
-
-- `test_greet.py` - Tests for the greet command
+- `test_hello.py` - Tests for the hello command
 - `test_mail.py` - Tests for mail commands
 - `test_services.py` - Unit tests for service classes
 
 Example test structure:
+
 ```python
 from typer.testing import CliRunner
 from my_package.main import app
@@ -153,9 +214,12 @@ This project uses Ruff for both linting and formatting with a line length of 120
 │   ├── models/             # Data models
 │   └── main.py             # CLI entry point
 ├── tests/                  # Test suite
+├── .pre-commit-config.yaml # Pre-commit hooks configuration
 ├── pyproject.toml          # Project configuration
 ├── Makefile                # Development commands
-└── README.md               # User documentation
+├── README.md               # User documentation
+├── USAGE.md                # Generated CLI documentation
+└── uv.lock                 # Locked dependencies
 ```
 
 ## Questions?
