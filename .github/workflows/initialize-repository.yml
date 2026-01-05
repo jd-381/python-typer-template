@@ -41,6 +41,11 @@ jobs:
           fi
           echo "✅ Repository not yet initialized, proceeding..."
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Validate inputs
         run: |
           PACKAGE_NAME="${{ inputs.package_name }}"
@@ -54,7 +59,7 @@ jobs:
           fi
 
           # Validate package_name is a valid Python identifier
-          if ! python3 -c "import sys; sys.exit(0 if '$PACKAGE_NAME'.isidentifier() else 1)"; then
+          if ! uv run python3 -c "import sys; sys.exit(0 if '$PACKAGE_NAME'.isidentifier() else 1)"; then
             echo "❌ Error: package_name must be a valid Python identifier"
             echo "   You provided: $PACKAGE_NAME"
             exit 1
@@ -70,11 +75,6 @@ jobs:
           echo "✅ Validation passed"
           echo "   Package name: $PACKAGE_NAME"
           echo "   CLI name: $CLI_NAME"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
 
       - name: Rename package directory
         run: |
