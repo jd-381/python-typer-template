@@ -78,7 +78,7 @@ init:
 	@echo ""
 	act workflow_dispatch \
 		--container-architecture linux/amd64 \
-		--platform ubuntu-latest=catthehacker/ubuntu:full-latest \
+		--platform ubuntu-latest=catthehacker/ubuntu:act-latest \
 		--input package_name=mail_fetcher \
 		--input cli_name=ma-fe \
 		--workflows .github/workflows/initialize-repository.yml
