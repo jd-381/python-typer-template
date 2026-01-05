@@ -52,10 +52,9 @@ install:
 	fi
 
 .PHONY: init
-test-init:
+init:
 	@if ! command -v act > /dev/null 2>&1; then \
 		echo "Error: act is not installed"; \
-		echo "Install it with: brew install act"; \
 		echo "See: https://github.com/nektos/act"; \
 		exit 1; \
 	fi
@@ -63,23 +62,23 @@ test-init:
 	@echo "   It will modify files in your repository."
 	@echo ""
 	@echo "Recommended: Run this in a git worktree for safe testing:"
-	@echo "  git worktree add ../test-init test-init-branch"
+	@echo "  git worktree add -b test-init ../test-init $$(git branch --show-current)"
 	@echo "  cd ../test-init"
-	@echo "  make test-init"
+	@echo "  make init"
 	@echo ""
-	@read -p "Continue? (yes/NO): " confirm; \
-	if [ "$$confirm" != "yes" ]; then \
+	@read -p "Continue? (y/N): " confirm; \
+	if [ "$$confirm" != "yes" ] && [ "$$confirm" != "y" ]; then \
 		echo "Aborted."; \
 		exit 1; \
 	fi
 	@echo ""
 	@echo "Testing initialization workflow with act..."
-	@echo "Package name: test_package"
-	@echo "CLI name: test-cli"
+	@echo "Package name: mail_fetcher"
+	@echo "CLI name: ma-fe"
 	@echo ""
 	act workflow_dispatch \
-		--input package_name=test_package \
-		--input cli_name=test-cli \
+		--input package_name=mail_fetcher \
+		--input cli_name=ma-fe \
 		--workflows .github/workflows/initialize-repository.yml
 
 .PHONY: lint
