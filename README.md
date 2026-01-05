@@ -4,6 +4,8 @@ A production-ready template for building Python CLI applications with [Typer](ht
 
 ## Features
 
+- ✅ **Turnkey initialization workflow** - One-click GitHub Actions workflow to configure your CLI with custom names
+- ✅ **Complete documentation** - Ready-to-use README, CONTRIBUTING, and USAGE guides automatically customized for your project
 - ✅ Modern Python project structure with [uv](https://github.com/astral-sh/uv)
 - ✅ Example CLI commands with subcommands
 - ✅ Comprehensive test suite with pytest
@@ -25,81 +27,72 @@ A production-ready template for building Python CLI applications with [Typer](ht
 
 Initialize your project using the GitHub Actions workflow:
 
-1. Go to your new repository's **Actions** tab on GitHub
+1. Go to your new repository's **Actions** tab
 2. Select the **Initialize Repository** workflow
 3. Click the **Run workflow** button
 4. Enter your project's inputs:
    - **Package name**: Python module name with underscores (e.g., `mail_fetcher`)
    - **CLI name**: Command-line executable name, use hyphens for multi-word (e.g., `ma-fe`)
 5. Click **Run workflow** (the job should show up shortly, otherwise refresh the page)
-6. Wait for the job to finish and the success summary to appear
+6. Once the success summary appears, **your CLI is ready to go!** 🎉
 
-The workflow will:
+### 3. Install Your CLI
 
-- Validate your inputs (prevents running twice)
-- Rename the package directory
-- Update all configuration files
-- Update all imports
-- Run linting, formatting, and tests
-- Commit and push the changes
-- Display a summary with next steps at the top of the workflow run page
+**Prerequisites:** [uv](https://github.com/astral-sh/uv) - Python package manager
 
-**You must retain the underscore and hyphen naming.** This template follows [PEP 8](https://peps.python.org/pep-0008/) naming conventions (underscores for Python modules/packages) and [PEP 508](https://peps.python.org/pep-0508/) distribution naming (hyphens for package names).
-
-### 3. Validate Your Setup
-
-After the workflow completes, set up your local repository for development (either clone or pull the workflow's changes):
+Clone your repository locally and install:
 
 ```bash
-# Install dependencies and set up git hooks
-make deps
-
-# Validate initialization
-make validate
-```
-
-Install the CLI and run a command:
-
-```bash
-# Installs to ~/.local/bin
+# Install the CLI to ~/.local/bin
 make install
 
-# Run hello command
-# Replace template-cli with your CLI name chosen during initialization
-template-cli hello --name World
+# Test it out (replace with your CLI name)
+<your-cli> hello --name World
 ```
 
-If the command prints `Hello World`, your setup is complete!
+## How the Initialization Workflow Works
 
-**Optional: Configure GitHub Branch Protection**
+The workflow automatically:
 
-Branch protection is optional but recommended to enforce CI checks before merging. See [SETUP.md](.github/SETUP.md).
+- ✅ Validates your inputs (prevents running twice)
+- ✅ Renames the package directory
+- ✅ Updates all configuration files (`pyproject.toml`, `Makefile`)
+- ✅ Updates all imports in Python files
+- ✅ Customizes documentation (`README.md`, `CONTRIBUTING.md`)
+- ✅ Runs linting, formatting, and tests to ensure everything works
+- ✅ Commits and pushes the changes
+- ✅ Displays a summary with next steps
 
+**Naming conventions:** This template follows [PEP 8](https://peps.python.org/pep-0008/) (underscores for Python modules) and [PEP 508](https://peps.python.org/pep-0508/) (hyphens for distribution names). The workflow enforces these conventions to ensure compatibility.
+
+
+## Next Steps
+
+### Optional: Configure Branch Protection
+
+Branch protection is recommended to enforce CI checks before merging. See [SETUP.md](.github/SETUP.md) for details.
 
 ```bash
-# Requires GitHub CLI
+# Requires GitHub CLI (gh)
 make github
 ```
 
-This opinionated command will:
+This command will:
+- ✅ Require all CI checks to pass (lint, format, test, docs)
+- ✅ Block force pushes and branch deletion
+- ✅ Enable automatic branch deletion after merge
 
-   - Require all CI checks to pass (Lint, Format Check, Test, Documentation)
-   - Block force pushes and branch deletion
-   - Enable automatic branch deletion after merge
+_Note: If not configured, pre-commit hooks will still enforce quality checks locally._
 
-_If not configured, the pre-commit hooks will still enforce the CI checks._
+### Build Your CLI
 
-### 4. Build Your CLI
+Now you're ready to customize your CLI! See [CONTRIBUTING.md](CONTRIBUTING.md) for the detailed developer workflow.
 
-Now you're ready to customize your CLI application. See [TEMPLATE_CONTRIBUTING.md](TEMPLATE_CONTRIBUTING.md) for a detailed developer workflow.
+Development workflow:
 
-High-level next steps:
-
-1. Write new commands in `<your_package_name>/commands/`
-2. Register your new commands in `<your_package_name>/main.py`
-3. Write tests in `tests/`
-4. Run validation: `make validate` (runs lint, format, and test)
-5. Generate `USAGE.md` documentation: `make docs`
-6. Replace `CONTRIBUTING.md` with `TEMPLATE_CONTRIBUTING.md` (remove template-specific content)
-7. Update `TEMPLATE_README.md` with your project details
-8. Replace this `README.md` with `TEMPLATE_README.md`
+1. **Add new commands** in `<your_package_name>/commands/`
+2. **Register commands** in `<your_package_name>/main.py`
+3. **Write tests** in `tests/`
+4. **Validate your changes**: `make validate`
+5. **Generate docs**: `make docs`
+6. **Customize documentation** - Update `CONTRIBUTING.md` and `README.md` with your project-specific details

@@ -1,10 +1,10 @@
-# Contributing to Python CLI Template
+# Contributing
 
-This guide will help you get started with development and testing.
+This guide covers the development workflow, testing, and code quality standards.
 
 ## Prerequisites
 
-- [uv](https://github.com/astral-sh/uv) - Python package manager
+**Required:** [uv](https://github.com/astral-sh/uv) - Python package manager
 
 ## Development Setup
 
@@ -14,19 +14,16 @@ This guide will help you get started with development and testing.
 make deps
 ```
 
-This will:
+Installs everything you need:
+- ✅ Runtime dependencies (Typer)
+- ✅ Development dependencies (pytest, ruff, typer-cli, pre-commit)
+- ✅ Pre-commit git hooks
 
-- Install runtime dependencies (Typer)
-- Install development dependencies (pytest, ruff, typer-cli, pre-commit)
-- Set up pre-commit git hooks
-
-The pre-commit hooks will automatically:
-
+**Pre-commit hooks** run automatically before each commit:
 - Format code with Ruff
 - Lint code with Ruff
 - Run the test suite
 - Generate documentation (fails if `USAGE.md` was edited manually)
-
 
 ### Validate Setup
 
@@ -34,65 +31,63 @@ The pre-commit hooks will automatically:
 make validate
 ```
 
-This will:
+Runs the complete quality check suite:
+- ✅ Lint with Ruff (`make lint`)
+- ✅ Format with Ruff (`make format`)
+- ✅ Test with pytest (`make test`)
 
-- Check code with Ruff linter (`make lint`)
-- Format code with Ruff formatter (`make format`)
-- Run the test suite with pytest (`make test`)
+Use this to verify your setup or manually validate changes before committing. These are the same checks that pre-commit hooks run.
 
-This command runs all quality checks in sequence, ensuring your code is properly linted, formatted, and tested. It's the same set of checks that pre-commit hooks run, making it useful for verifying your setup or manually validating changes before committing.
+### Testing the CLI
 
-### Testing The CLI
-
-**During development**, use `uv run` to test your changes without installing:
+**During development** - Test without installing:
 
 ```bash
 uv run template-cli hello --name World
 ```
 
-**To test the installed CLI**, use `make install`:
+**Production testing** - Install and test:
 
 ```bash
+# Install to ~/.local/bin
 make install
-```
 
-This installs it globally to `~/.local/bin`. Once installed, you can run:
-
-```bash
+# Run the installed CLI
 template-cli hello --name World
+
+# After code changes, reinstall with fresh cache
+make upgrade
 ```
 
-After making code changes, use `make upgrade` to reinstall with a fresh cache.
-
-**Note:** If the command isn't found, make sure `~/.local/bin` is in your PATH:
+**PATH setup:** If the command isn't found, add `~/.local/bin` to your PATH:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-## Available Make Commands
+## Make Commands
 
-Run `make` to see all available commands.
+Run `make` without arguments to see all available commands.
 
-### Quick Reference
+### Command Reference
 
 | Command | Description |
 |---------|-------------|
 | `make deps` | Install dependencies and set up git hooks |
-| `make docs` | Generate CLI usage documentation to `USAGE.md` |
-| `make format` | Format code with Ruff formatter |
-| `make github` | Configure GitHub branch protection rules (requires GitHub CLI) |
-| `make install` | Install CLI tool globally to `~/.local/bin` |
-| `make lint` | Check code with Ruff linter (without modifying files) |
-| `make test` | Run test suite with pytest |
-| `make upgrade` | Reinstall CLI tool (clears cache and forces fresh install) |
 | `make validate` | Run lint, format, and test |
+| `make install` | Install CLI globally to `~/.local/bin` |
+| `make upgrade` | Reinstall CLI with fresh cache |
+| `make docs` | Generate `USAGE.md` documentation |
+| `make lint` | Check code with Ruff (no changes) |
+| `make format` | Format code with Ruff |
+| `make test` | Run test suite with pytest |
+| `make github` | Configure branch protection (requires GitHub CLI) |
 
 ## Project Structure
 
 ```
 .
-├── template_package/                 # Template package (gets renamed)
+├── template_package/                 # Python module package
 │   ├── commands/                     # CLI command modules
 │   ├── common/                       # Shared utilities
 │   ├── models/                       # Data models
@@ -100,43 +95,46 @@ Run `make` to see all available commands.
 ├── tests/                            # Test suite
 ├── .github/
 │   ├── workflows/
-│   │   ├── initialize-repository.yml # Main initialization workflow
 │   │   ├── ci.yml                    # CI workflow
-│   │   └── SETUP.md                  # Workflow testing guide
+│   ├── SETUP.md                      # Workflow testing guide
 │   └── setup-branch-protection.sh    # Branch protection setup script
 ├── .pre-commit-config.yaml           # Pre-commit hooks configuration
-├── pyproject.toml                    # Project configuration
+├── .python-version                   # Python version for uv
+├── CONTRIBUTING.md                   # This file - for contributors
 ├── Makefile                          # Development commands
-├── README.md                         # Template repository documentation
-├── TEMPLATE_README.md                # README for initialized projects
-├── CONTRIBUTING.md                   # This file - for template contributors
-├── TEMPLATE_CONTRIBUTING.md          # CONTRIBUTING for initialized projects
+├── pyproject.toml                    # Project configuration
+├── README.md                         # User documentation
 ├── USAGE.md                          # Generated CLI documentation
 └── uv.lock                           # Locked dependencies
 ```
 
-## Testing Strategy
+## Testing
 
 ### Unit Tests
 
-- Test individual commands and services
-- Located in `tests/test_*.py`
-- Run with `make test`
+Tests are located in `tests/test_*.py` and cover individual commands and services.
+
+```bash
+make test
+```
 
 ### Pre-commit Hooks
 
-- Automatic checks before each commit
-- Ensures code quality standards
-- Validates documentation is up to date
+Pre-commit hooks run automatically before each commit to ensure:
+- ✅ Code quality standards (lint and format)
+- ✅ All tests pass
+- ✅ Documentation is up to date
 
 ## Code Style
 
-This project uses Ruff for both linting and formatting. The configuration is in `pyproject.toml`.
+**Linting and formatting:** Ruff (configured in `pyproject.toml`)
 
-## Questions?
+The project follows standard Python conventions with automatic enforcement through pre-commit hooks and CI/CD.
 
-If you have questions or need help:
-1. Look at existing issues and PRs for similar problems
-2. Open a new issue with your question
+## Need Help?
+
+If you have questions or run into issues:
+1. Check existing issues and pull requests
+2. Open a new issue with details
 
 Thank you for contributing! 🎉
