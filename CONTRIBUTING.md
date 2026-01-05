@@ -104,11 +104,11 @@ The workflow will:
 **Example commands:**
 
 ```bash
-# Create a worktree
-git worktree add ../tmp test-init
+# Create a worktree from your feature branch
+git worktree add -b test-init ../test-init my-feature-branch
 
 # Navigate to the worktree
-cd ../tmp
+cd ../test-init
 
 # Run the initialization workflow with act
 make init
