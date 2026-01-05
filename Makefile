@@ -11,7 +11,6 @@ help:
 	@echo "  make install      - Install CLI tool globally"
 	@echo "  make lint         - Check code with Ruff linter"
 	@echo "  make test         - Run test suite with pytest"
-	@echo "  make init         - Test initialization workflow locally with act"
 	@echo "  make upgrade      - Reinstall CLI tool (clears cache)"
 	@echo "  make validate     - Run lint, format, and test"
 
@@ -44,43 +43,12 @@ github:
 install:
 	uv tool install .
 	@if which $(CLI_NAME) > /dev/null 2>&1; then \
-		echo "$(CLI_NAME) installed successfully"; \
+		echo "$(CLI_NAME) installed successfully!"; \
 	else \
 		echo "⚠️  $(CLI_NAME) installed but not in PATH"; \
 		echo "   Add ~/.local/bin to your PATH:"; \
 		echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""; \
 	fi
-
-.PHONY: init
-test-init:
-	@if ! command -v act > /dev/null 2>&1; then \
-		echo "Error: act is not installed"; \
-		echo "Install it with: brew install act"; \
-		echo "See: https://github.com/nektos/act"; \
-		exit 1; \
-	fi
-	@echo "⚠️  WARNING: This workflow is DESTRUCTIVE!"
-	@echo "   It will modify files in your repository."
-	@echo ""
-	@echo "Recommended: Run this in a git worktree for safe testing:"
-	@echo "  git worktree add ../test-init test-init-branch"
-	@echo "  cd ../test-init"
-	@echo "  make test-init"
-	@echo ""
-	@read -p "Continue? (yes/NO): " confirm; \
-	if [ "$$confirm" != "yes" ]; then \
-		echo "Aborted."; \
-		exit 1; \
-	fi
-	@echo ""
-	@echo "Testing initialization workflow with act..."
-	@echo "Package name: test_package"
-	@echo "CLI name: test-cli"
-	@echo ""
-	act workflow_dispatch \
-		--input package_name=test_package \
-		--input cli_name=test-cli \
-		--workflows .github/workflows/initialize-repository.yml
 
 .PHONY: lint
 lint:
