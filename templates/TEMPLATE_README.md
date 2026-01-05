@@ -1,6 +1,6 @@
 # template_package
 
-A brief description of what template-cli does.
+template_package is an awesome CLI tool!
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ make install
 Expected output:
 
 ```
-template-cli installed successfully
+template-cli installed successfully!
 ```
 
 The CLI is installed to `~/.local/bin`. Make sure this directory is in your `$PATH`:
@@ -33,11 +33,15 @@ See the [usage documentation](./USAGE.md) for all available commands and options
 
 ### Quick Start
 
-```bash
-# See commands
-template-cli --help
+List available commands:
 
-# Example command
+```bash
+template-cli --help
+```
+
+Greet the world:
+
+```bash
 template-cli hello --name World
 ```
 

@@ -11,7 +11,6 @@ help:
 	@echo "  make install      - Install CLI tool globally"
 	@echo "  make lint         - Check code with Ruff linter"
 	@echo "  make test         - Run test suite with pytest"
-	@echo "  make init         - Test initialization workflow locally with act"
 	@echo "  make upgrade      - Reinstall CLI tool (clears cache)"
 	@echo "  make validate     - Run lint, format, and test"
 
@@ -44,44 +43,12 @@ github:
 install:
 	uv tool install .
 	@if which $(CLI_NAME) > /dev/null 2>&1; then \
-		echo "$(CLI_NAME) installed successfully"; \
+		echo "$(CLI_NAME) installed successfully!"; \
 	else \
 		echo "⚠️  $(CLI_NAME) installed but not in PATH"; \
 		echo "   Add ~/.local/bin to your PATH:"; \
 		echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""; \
 	fi
-
-.PHONY: init
-init:
-	@if ! command -v act > /dev/null 2>&1; then \
-		echo "Error: act is not installed"; \
-		echo "See: https://github.com/nektos/act"; \
-		exit 1; \
-	fi
-	@echo "⚠️  WARNING: This workflow is DESTRUCTIVE!"
-	@echo "   It will modify files in your repository."
-	@echo ""
-	@echo "Recommended: Run this in a git worktree for safe testing:"
-	@echo "  git worktree add -b test-init ../test-init $$(git branch --show-current)"
-	@echo "  cd ../test-init"
-	@echo "  make init"
-	@echo ""
-	@read -p "Continue? (y/N): " confirm; \
-	if [ "$$confirm" != "yes" ] && [ "$$confirm" != "y" ]; then \
-		echo "Aborted."; \
-		exit 1; \
-	fi
-	@echo ""
-	@echo "Testing initialization workflow with act..."
-	@echo "Package name: mail_fetcher"
-	@echo "CLI name: ma-fe"
-	@echo ""
-	act workflow_dispatch \
-		--container-architecture linux/amd64 \
-		--platform ubuntu-latest=catthehacker/ubuntu:act-latest \
-		--input package_name=mail_fetcher \
-		--input cli_name=ma-fe \
-		--workflows .github/workflows/initialize-repository.yml
 
 .PHONY: lint
 lint:
