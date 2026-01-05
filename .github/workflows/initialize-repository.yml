@@ -128,6 +128,29 @@ jobs:
 
           echo "✅ Updated imports and version() call in package files"
 
+      - name: Update CONTRIBUTING.md
+        run: |
+          sed -i "s/template-cli/${{ inputs.cli_name }}/g" CONTRIBUTING.md
+          sed -i "s/template_package/${{ inputs.package_name }}/g" CONTRIBUTING.md
+          echo "✅ Updated CONTRIBUTING.md"
+
+      - name: Update TEMPLATE_README.md and replace README.md
+        run: |
+          # Convert package_name underscores to spaces for user-friendly display name
+          DISPLAY_NAME="${{ inputs.package_name }}"
+          DISPLAY_NAME="${DISPLAY_NAME//_/ }"
+
+          sed -i "s/template-cli/${{ inputs.cli_name }}/g" templates/TEMPLATE_README.md
+          sed -i "s/template_package/$DISPLAY_NAME/g" templates/TEMPLATE_README.md
+
+          # Replace README.md with the customized template
+          mv templates/TEMPLATE_README.md README.md
+
+          # Remove templates directory
+          rm -rf templates/
+
+          echo "✅ Updated and replaced README.md, removed templates directory"
+
       - name: Verify changes
         run: |
           echo "📋 Changed files:"
