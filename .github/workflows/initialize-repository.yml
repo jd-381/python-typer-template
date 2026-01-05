@@ -53,7 +53,7 @@ jobs:
 
           # Validate package_name uses underscores (no hyphens)
           if [[ "$PACKAGE_NAME" =~ - ]]; then
-            echo "❌ Error: package_name must use underscores, not hyphens (e.g., weather_fetcher)"
+            echo "❌ Error: package_name must use underscores, not hyphens (e.g., mail_fetcher)"
             echo "   You provided: $PACKAGE_NAME"
             exit 1
           fi
@@ -78,12 +78,13 @@ jobs:
 
       - name: Rename package directory
         run: |
-          if [ -d "template_package" ]; then
-            mv template_package "${{ inputs.package_name }}"
-            echo "✅ Renamed template_package/ to ${{ inputs.package_name }}/"
-          else
-            echo "⚠️  template_package directory not found, skipping"
+          if [ ! -d "template_package" ]; then
+            echo "❌ Error: template_package directory not found!"
+            echo "This should never happen - the workflow should have exited earlier."
+            exit 1
           fi
+          mv template_package "${{ inputs.package_name }}"
+          echo "✅ Renamed template_package/ to ${{ inputs.package_name }}/"
 
       - name: Update Makefile
         run: |
